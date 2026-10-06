@@ -2,7 +2,11 @@
 
 > **Asignatura:** Desarrollo Web  
 > **Institución:** Pontificia Universidad Javeriana  
-> **Estudiante:** Miguel Ángel  
+> **Integrantes:**  
+> - Miguel Ángel Acuña  
+> - Samuel Manrique  
+> - Javier Jaimes  
+> - Juan Pablo Mota  
 > **Framework Base:** Angular 19.2 (Arquitectura 100% Standalone) | TypeScript 5.7  
 
 ---
@@ -21,20 +25,6 @@ Los diagramas arquitectónicos y de datos del sistema se encuentran ubicados en 
    - Modela la jerarquía, atributos, métodos y relaciones entre `Cliente`, `Pedido`, `ItemPedido`, `Comida`, `Categoria`, `Adicional`, `Domiciliario`, `Operador` y `Administrador`.
 2. **Diagrama Entidad-Relación ([`Diagramas/Diagrama_Entidad_Relacion.png`](Diagramas/Diagrama_Entidad_Relacion.png)):**
    - Esquema relacional de base de datos con notación Crow's Foot que modela tablas, llaves primarias (PK), foráneas (FK), tipos de datos y cardinalidades completas.
-
----
-
-## 🏛️ Arquitectura y Patrones Implementados
-
-El proyecto sigue rigurosamente la metodología de desarrollo de Angular 19:
-
-- **100% Standalone (Sin `NgModule`):** Eliminación completa de `app.module.ts`. Cada componente gestiona e importa exclusivamente sus dependencias visuales.
-- **Mentalidad Lego:** Descomposición modular de interfaces en subcomponentes atómicos (`components/`) dentro de cada página contenedora (`pages/`).
-- **Reactividad Declarativa con Signals:** Uso de APIs funcionales `input()` y `output()` para la comunicación entre componentes padres e hijos, invocadas con llamada explícita en templates (`signal()`).
-- **Control Flow Nativo:** Sintaxis moderna del compilador de Angular (`@if`, `@else`, `@for ... of ...; track ...` con bloque `@empty`), erradicando directivas legadas (`*ngIf`, `*ngFor`).
-- **Inyección Funcional de Dependencias:** Uso de `inject()` en componentes y servicios en sustitución de constructores sobrecargados.
-- **Formularios Reactivos Unificados:** Formularios con `ReactiveFormsModule` (`FormGroup`, `FormControl`, `Validators`) que unifican creación y modificación en una sola pantalla, con precarga tolerante mediante `patchValue()`.
-- **Servicios Singleton en Memoria:** Servicios con `@Injectable({ providedIn: 'root' })` que administran colecciones simuladas en memoria mediante mutación in-place (`.splice()`).
 
 ---
 
