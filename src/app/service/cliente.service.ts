@@ -11,14 +11,15 @@ export class ClienteService {
 
   // Base de datos simulada en memoria
   private clientes: Cliente[] = [];
+  private clienteActual: Cliente | null = null;
 
   private inicializarDatos(): void {
     this.clientes = [
       new Cliente(
         1,
-        'Carlos Mendoza',
-        'carlos.mendoza@email.com',
-        'carlos123',
+        'Lionel Messi',
+        'lionel.messi@email.com',
+        'messi10',
         '3104567890',
         'Carrera 7 # 45-23, Bogotá',
         true,
@@ -26,9 +27,9 @@ export class ClienteService {
       ),
       new Cliente(
         2,
-        'Valeria Gómez',
-        'valeria.gomez@email.com',
-        'valeria456',
+        'Carlos Mendoza',
+        'carlos.mendoza@email.com',
+        'carlos123',
         '3159876543',
         'Calle 100 # 15-34, Bogotá',
         true,
@@ -36,9 +37,9 @@ export class ClienteService {
       ),
       new Cliente(
         3,
-        'Andrés Felipe Rodríguez',
-        'andres.rodriguez@email.com',
-        'andres789',
+        'Valeria Gómez',
+        'valeria.gomez@email.com',
+        'valeria456',
         '3201122334',
         'Avenida Circunvalar # 85-12, Bogotá',
         true,
@@ -46,35 +47,18 @@ export class ClienteService {
       ),
       new Cliente(
         4,
-        'Mariana Quintero',
-        'mariana.quintero@email.com',
-        'mariana321',
+        'Andrés Felipe Rodríguez',
+        'andres.rodriguez@email.com',
+        'andres789',
         '3018899001',
         'Transversal 23 # 67-89, Bogotá',
         true,
         [],
       ),
-      new Cliente(
-        5,
-        'Santiago Morales',
-        'santiago.morales@email.com',
-        'santiago654',
-        '3184455667',
-        'Diagonal 45 # 19-50, Bogotá',
-        false,
-        [],
-      ),
-      new Cliente(
-        6,
-        'Camila Restrepo',
-        'camila.restrepo@email.com',
-        'camila987',
-        '3127788990',
-        'Calle 127 # 53-10, Bogotá',
-        true,
-        [],
-      ),
     ];
+
+    // Por defecto, se asigna el primer cliente para permitir acceso directo a Mi Portal
+    this.clienteActual = this.clientes[0];
   }
 
   getClientes(): Cliente[] {
@@ -85,13 +69,39 @@ export class ClienteService {
     return this.clientes.find((c) => c.id === id);
   }
 
-  addCliente(cliente: Cliente): void {
+  getClienteActual(): Cliente | null {
+    return this.clienteActual;
+  }
+
+  setClienteActual(cliente: Cliente | null): void {
+    this.clienteActual = cliente;
+  }
+
+  autenticar(correo: string, contrasena: string): Cliente | undefined {
+    const encontrado = this.clientes.find(
+      (c) =>
+        c.correo.trim().toLowerCase() === correo.trim().toLowerCase() &&
+        c.contrasena === contrasena,
+    );
+    if (encontrado) {
+      this.clienteActual = encontrado;
+    }
+    return encontrado;
+  }
+
+  cerrarSesion(): void {
+    this.clienteActual = null;
+  }
+
+  addCliente(cliente: Cliente): Cliente {
     const maxId =
       this.clientes.length > 0
         ? Math.max(...this.clientes.map((c) => c.id))
         : 0;
     cliente.id = maxId + 1;
     this.clientes.push(cliente);
+    this.clienteActual = cliente;
+    return cliente;
   }
 
   updateCliente(id: number, cliente: Cliente): void {
@@ -99,6 +109,9 @@ export class ClienteService {
     const index = this.clientes.findIndex((c) => c.id === id);
     if (index !== -1) {
       this.clientes[index] = cliente;
+      if (this.clienteActual?.id === id) {
+        this.clienteActual = cliente;
+      }
     }
   }
 
@@ -106,6 +119,9 @@ export class ClienteService {
     const index = this.clientes.findIndex((c) => c.id === id);
     if (index !== -1) {
       this.clientes.splice(index, 1);
+      if (this.clienteActual?.id === id) {
+        this.clienteActual = null;
+      }
     }
   }
 }

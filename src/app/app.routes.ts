@@ -3,9 +3,9 @@ import { LandingPageComponent } from './pages/landing-page/landing-page.componen
 import { ComidaTablePageComponent } from './pages/comida-table-page/comida-table-page.component';
 import { ComidaFormComponent } from './pages/comida-form/comida-form.component';
 import { ComidaDetailComponent } from './pages/comida-detail/comida-detail.component';
-import { ClienteTablePageComponent } from './pages/cliente-table-page/cliente-table-page.component';
-import { ClienteFormComponent } from './pages/cliente-form/cliente-form.component';
-import { ClienteDetailComponent } from './pages/cliente-detail/cliente-detail.component';
+import { LoginComponent } from './pages/login/login.component';
+import { RegistroComponent } from './pages/registro/registro.component';
+import { MiPortalComponent } from './pages/mi-portal/mi-portal.component';
 
 export const routes: Routes = [
   {
@@ -41,28 +41,20 @@ export const routes: Routes = [
     component: ComidaDetailComponent,
   },
   {
-    path: 'clientes',
-    component: ClienteTablePageComponent,
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
+    path: 'registro',
+    component: RegistroComponent,
   },
   {
     path: 'cliente/portal',
-    component: ClienteTablePageComponent,
+    component: MiPortalComponent,
   },
   {
-    path: 'clientes/new',
-    component: ClienteFormComponent,
-  },
-  {
-    path: 'clientes/crear',
-    component: ClienteFormComponent,
-  },
-  {
-    path: 'clientes/editar/:id',
-    component: ClienteFormComponent,
-  },
-  {
-    path: 'clientes/:id',
-    component: ClienteDetailComponent,
+    path: 'cliente/portal/:id',
+    component: MiPortalComponent,
   },
   {
     path: '**',

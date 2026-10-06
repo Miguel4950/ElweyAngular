@@ -13,7 +13,7 @@
 
 ## 📌 Descripción del Proyecto
 
-**Restaurante El Wey** es una Single Page Application (SPA) moderna desarrollada para la gestión comercial y operativa de un restaurante de comida tradicional mexicana. La plataforma cuenta con catálogos dinámicos de platillos, fichas técnicas de detalle, gestión de inventario gastronómico y un módulo completo de administración y directorio de clientes con persistencia simulada en memoria (*datos quemados*), estructurado bajo la doctrina y buenas prácticas de ingeniería de software para Angular 19.
+**Restaurante El Wey** es una Single Page Application (SPA) moderna desarrollada para la gestión comercial y operativa de un restaurante de comida tradicional mexicana. La plataforma cuenta con catálogos dinámicos de platillos, fichas técnicas de detalle, gestión de inventario gastronómico y un flujo de clientes fiel a la aplicación central (Inicio de Sesión, Registro y Mi Portal para consulta, actualización y eliminación de cuenta con persistencia en memoria), estructurado bajo la doctrina y buenas prácticas de ingeniería de software para Angular 19.
 
 ---
 
@@ -35,7 +35,7 @@ src/
 ├── public/                                # Recursos estáticos servidos en raíz (imágenes de comidas, logo)
 │   └── images/
 │       ├── logo_el_wey.jpg
-│       └── comidas/                       # Fotografías de los 40 platillos de la carta
+│       └── comidas/                       # Fotografías de los platillos de la carta
 ├── app/
 │   ├── components/                        # Componentes GLOBALES de layout
 │   │   ├── navbar/                        # Barra de navegación principal
@@ -56,12 +56,12 @@ src/
 │   │   ├── comida-table-page/             # Gestión de catálogo de comidas (Tabla interactiva)
 │   │   ├── comida-form/                   # Formulario Crear / Editar platillo
 │   │   ├── comida-detail/                 # Vista detallada de platillo y adicionales
-│   │   ├── cliente-table-page/            # Directorio y gestión de clientes registrados
-│   │   ├── cliente-form/                  # Formulario Crear / Editar cliente
-│   │   └── cliente-detail/                # Ficha de detalle de cliente
+│   │   ├── login/                         # Pantalla de autenticación y acceso al sistema
+│   │   ├── registro/                      # Pantalla de creación de cuenta de cliente
+│   │   └── mi-portal/                     # Portal personal de cliente (ver, editar y eliminar)
 │   ├── service/                           # Servicios Singleton de estado y datos en memoria
 │   │   ├── comida.service.ts              # Catálogo con 40 comidas y categorías
-│   │   └── cliente.service.ts             # Directorio de clientes con operaciones CRUD
+│   │   └── cliente.service.ts             # Servicio de clientes y autenticación en memoria
 │   ├── app.component.ts                   # Componente raíz (Shell)
 │   ├── app.config.ts                      # Proveedores de la aplicación (Router)
 │   └── app.routes.ts                      # Definición y precedencia estricta de rutas
@@ -74,14 +74,15 @@ src/
 | Módulo | Ruta | Componente | Descripción |
 | :--- | :--- | :--- | :--- |
 | **Inicio** | `/` | `LandingPageComponent` | Portada comercial con menú destacado y presentación. |
-| **Comidas** | `/comidas` | `ComidaTablePageComponent` | Tabla de gestión e inventario gastronómico. |
+| **Comidas** | `/comidas` / `/comidas/tabla` | `ComidaTablePageComponent` | Tabla de gestión e inventario gastronómico. |
+| | `/comidas/tarjetas` | `ComidaTablePageComponent` | Vista en cuadrícula de tarjetas de menú. |
 | | `/comidas/new` | `ComidaFormComponent` | Registro de nuevo plato en la carta. |
 | | `/comidas/editar/:id` | `ComidaFormComponent` | Edición de plato existente. |
 | | `/comidas/:id` | `ComidaDetailComponent` | Ficha técnica de detalle de la comida. |
-| **Clientes** | `/clientes` | `ClienteTablePageComponent` | Directorio y tabla administrativa de clientes. |
-| | `/clientes/new` | `ClienteFormComponent` | Registro de nuevo cliente. |
-| | `/clientes/editar/:id` | `ClienteFormComponent` | Modificación de información de cliente. |
-| | `/clientes/:id` | `ClienteDetailComponent` | Ficha detallada de contacto y estado del cliente. |
+| **Clientes** | `/login` | `LoginComponent` | Inicio de sesión con credenciales de prueba. |
+| | `/registro` | `RegistroComponent` | Registro de cliente nuevo (Create). |
+| | `/cliente/portal` | `MiPortalComponent` | Portal personal para consulta y edición de datos (Read / Update). |
+| | `/cliente/portal/:id` | `MiPortalComponent` | Portal de cliente accesible por identificador. |
 
 ---
 

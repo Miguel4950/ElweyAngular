@@ -1,0 +1,156 @@
+<app-navbar></app-navbar>
+
+<main class="main-portal">
+  <div class="portal-container mx-auto w-full max-w-3xl">
+
+    <!-- Encabezado de la Sección -->
+    <div class="portal-encabezado">
+      <p class="portal-subtitulo">CUENTA PERSONAL</p>
+      <h1 class="portal-titulo text-4xl">Mi Portal</h1>
+      <p class="portal-desc">
+        Gestiona tu información personal, actualiza tus datos de contacto y dirección.
+      </p>
+    </div>
+
+    <div class="portal-divider"></div>
+
+    <!-- Mensaje de confirmación al actualizar datos -->
+    @if (mensajeActualizado) {
+      <div class="alerta-actualizado">
+        <span style="font-size: 18px;">✅</span>
+        <span><strong>¡Cambios confirmados!</strong> Tu información personal ha sido actualizada con éxito en el sistema.</span>
+      </div>
+    }
+
+    <!-- Mensaje de bienvenida tras registro -->
+    @if (mensajeBienvenido) {
+      <div class="alerta-bienvenido">
+        <span>🎉 <strong>¡Bienvenido a El Wey!</strong> Tu cuenta ha sido creada exitosamente. Este es tu portal personal.</span>
+      </div>
+    }
+
+    <!-- Alerta de Error -->
+    @if (errorMessage) {
+      <div class="alerta-error-portal">
+        <span>{{ errorMessage }}</span>
+      </div>
+    }
+
+    <!-- Tarjeta: Información Personal -->
+    <div class="portal-card">
+      <h2 class="portal-card-titulo">Información Personal</h2>
+
+      <form [formGroup]="portalForm" (ngSubmit)="onActualizar()" class="portal-form">
+
+        <!-- Campo 1: Nombre Completo -->
+        <div class="campo-grupo">
+          <label for="nombre" class="campo-label">NOMBRE COMPLETO</label>
+          <input
+            type="text"
+            id="nombre"
+            formControlName="nombre"
+            placeholder="Tu nombre completo"
+            class="campo-input"
+          />
+          @if (portalForm.get('nombre')?.touched && portalForm.get('nombre')?.invalid) {
+            <small class="error-texto" style="color: #f87171; font-size: 11px;">
+              El nombre debe tener al menos 3 caracteres
+            </small>
+          }
+        </div>
+
+        <!-- Campo 2: Correo Electrónico -->
+        <div class="campo-grupo">
+          <label for="correo" class="campo-label">CORREO ELECTRÓNICO</label>
+          <input
+            type="email"
+            id="correo"
+            formControlName="correo"
+            placeholder="correo@ejemplo.com"
+            class="campo-input"
+          />
+          @if (portalForm.get('correo')?.touched && portalForm.get('correo')?.invalid) {
+            <small class="error-texto" style="color: #f87171; font-size: 11px;">
+              Ingresa un correo electrónico válido
+            </small>
+          }
+        </div>
+
+        <!-- Fila 3: Teléfono + Fecha de Registro (solo lectura) -->
+        <div class="fila-dos-campos">
+          <div class="campo-grupo">
+            <label for="telefono" class="campo-label">TELÉFONO</label>
+            <input
+              type="tel"
+              id="telefono"
+              formControlName="telefono"
+              placeholder="3XX XXX XXXX"
+              class="campo-input"
+            />
+            @if (portalForm.get('telefono')?.touched && portalForm.get('telefono')?.invalid) {
+              <small class="error-texto" style="color: #f87171; font-size: 11px;">
+                El teléfono es obligatorio
+              </small>
+            }
+          </div>
+
+          <div class="campo-grupo">
+            <label for="fechaRegistro" class="campo-label">MIEMBRO DESDE</label>
+            <input
+              type="text"
+              id="fechaRegistro"
+              formControlName="fechaRegistro"
+              readonly
+              class="campo-input campo-readonly"
+            />
+          </div>
+        </div>
+
+        <!-- Fila 4: Dirección -->
+        <div class="campo-grupo">
+          <label for="direccion" class="campo-label">DIRECCIÓN EN BOGOTÁ</label>
+          <input
+            type="text"
+            id="direccion"
+            formControlName="direccion"
+            placeholder="Calle 123 # 45 - 67, Bogotá"
+            class="campo-input"
+          />
+          @if (portalForm.get('direccion')?.touched && portalForm.get('direccion')?.invalid) {
+            <small class="error-texto" style="color: #f87171; font-size: 11px;">
+              La dirección es obligatoria
+            </small>
+          }
+        </div>
+
+        <!-- Botones: Restablecer + Confirmar -->
+        <div class="portal-acciones">
+          <button type="button" (click)="onRestablecer()" class="btn-restablecer">
+            RESTABLECER
+          </button>
+          <button type="submit" class="btn-confirmar">
+            CONFIRMAR CAMBIOS
+          </button>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Zona de Peligro: Eliminar Cuenta -->
+    <div class="zona-peligro">
+      <div class="zona-peligro-info">
+        <h3 class="zona-peligro-titulo">ZONA DE PELIGRO</h3>
+        <p class="zona-peligro-desc">
+          Esta acción es permanente. Al eliminar tu cuenta, perderás todos tus datos y no podrás recuperarlos.
+        </p>
+      </div>
+      <button type="button" (click)="onEliminarCuenta()" class="btn-eliminar-cuenta">
+        ELIMINAR CUENTA
+      </button>
+    </div>
+
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

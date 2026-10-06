@@ -1,0 +1,116 @@
+<app-navbar></app-navbar>
+
+<main class="login-main">
+  <div class="login-card">
+    <!-- Encabezado de la Tarjeta -->
+    <div class="login-header">
+      <span class="login-subtitle">Acceso al Sistema</span>
+      <h1 class="login-title">Iniciar Sesión</h1>
+      <p class="login-desc">
+        Ingresa tu correo y contraseña para acceder al sistema
+      </p>
+    </div>
+
+    <!-- Formulario reactivo de login -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-login" autocomplete="off">
+
+      <!-- Alerta de Error -->
+      @if (errorMessage) {
+        <div class="alerta-error">
+          <svg class="alerta-icono" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <!-- Alerta de Éxito tras logout -->
+      @if (logoutMessage) {
+        <div class="alerta-exito">
+          <span>Has cerrado sesión con éxito.</span>
+        </div>
+      }
+
+      <!-- Alerta de Info Mi Portal -->
+      @if (portalAlert) {
+        <div class="alerta-info">
+          <span>Inicia sesión para acceder a <strong>Mi Portal</strong>, o crea una cuenta nueva.</span>
+        </div>
+      }
+
+      <!-- Campo 1: Correo Electrónico -->
+      <div class="form-grupo">
+        <label for="email" class="form-label">Correo Electrónico</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          autocomplete="off"
+          placeholder="nombre@ejemplo.com"
+          class="form-input"
+        />
+        @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
+          <small class="error-texto" style="color: #f87171; font-size: 11px; margin-top: 4px;">
+            Ingresa un correo electrónico válido
+          </small>
+        }
+      </div>
+
+      <!-- Campo 2: Contraseña -->
+      <div class="form-grupo">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          autocomplete="new-password"
+          placeholder="••••••••"
+          class="form-input"
+        />
+        @if (loginForm.get('password')?.touched && loginForm.get('password')?.invalid) {
+          <small class="error-texto" style="color: #f87171; font-size: 11px; margin-top: 4px;">
+            La contraseña es requerida
+          </small>
+        }
+      </div>
+
+      <!-- Botón de Envío -->
+      <button type="submit" id="btn-submit-login" class="btn-submit-login">
+        INICIAR SESIÓN
+      </button>
+    </form>
+
+    <!-- Enlace a Registro -->
+    <div class="login-footer-box">
+      <a [routerLink]="['/registro']" class="link-registro">
+        ¿No tienes cuenta? Regístrate aquí
+      </a>
+    </div>
+
+    <!-- Credenciales de prueba oficiales -->
+    <div class="caja-credenciales">
+      <p class="titulo-credenciales">Credenciales de prueba:</p>
+      <div class="lista-credenciales">
+        <div (click)="cargarCredencial('lionel.messi@email.com', 'messi10')" style="cursor: pointer;" title="Clic para rellenar">
+          <span style="color: #facc15; font-weight: 700;">👤 Cliente:</span>
+          lionel.messi&#64;email.com / <span class="badge-clave">messi10</span>
+        </div>
+        <div>
+          <span style="color: #38bdf8; font-weight: 700;">🍳 Operador:</span>
+          operador&#64;elwey.com / <span class="badge-clave">operador123</span>
+        </div>
+        <div>
+          <span style="color: #ef4444; font-weight: 700;">⚙️ Admin:</span>
+          admin&#64;elwey.com / <span class="badge-clave">admin123</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { ClienteService } from '../../service/cliente.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,6 +9,17 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navbar.component.css',
 })
 export class NavbarComponent {
+  private clienteService = inject(ClienteService);
+  private router = inject(Router);
+
   title: string = 'El Wey';
-  username: string = '';
+
+  get clienteActual() {
+    return this.clienteService.getClienteActual();
+  }
+
+  cerrarSesion(): void {
+    this.clienteService.cerrarSesion();
+    this.router.navigate(['/login'], { queryParams: { logout: 'true' } });
+  }
 }
