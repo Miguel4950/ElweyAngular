@@ -94,8 +94,8 @@ src/
 
 ### 1. Clonar el Repositorio:
 ```bash
-git clone https://github.com/Miguel4950/ElWeyDesarrolloWeb.git
-cd ElWeyDesarrolloWeb
+git clone https://github.com/Miguel4950/ElweyAngular.git
+cd ElweyAngular
 ```
 
 ### 2. Instalar Dependencias:
