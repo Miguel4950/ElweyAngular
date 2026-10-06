@@ -1,0 +1,124 @@
+:host {
+  flex: 1.1;
+  display: flex;
+  flex-direction: column;
+}
+
+.col-info-detalle {
+  flex: 1;
+  padding: 36px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.subtitulo-detalle-ficha {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #ee1a0e;
+  margin: 0 0 6px 0;
+}
+
+.subtitulo-detalle-ficha span {
+  color: #d8ccc3;
+}
+
+.titulo-detalle-plato {
+  font-family: 'Abril Fatface', Georgia, serif;
+  font-size: 34px;
+  color: #fcf2e9;
+  margin: 0 0 10px 0;
+}
+
+.badge-jaime-favorita {
+  display: inline-block;
+  background: linear-gradient(135deg, #ab1d19, #ee1a0e);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-bottom: 14px;
+}
+
+.fila-precio-detalle {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.precio-grande-detalle {
+  font-family: 'Abril Fatface', Georgia, serif;
+  font-size: 32px;
+  color: #ee1a0e;
+}
+
+.precio-unidad-detalle {
+  font-size: 12px;
+  color: #8c8278;
+  text-transform: uppercase;
+}
+
+.desc-completa-detalle {
+  font-size: 14px;
+  color: #d1c7bd;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 20px;
+  margin-bottom: 24px;
+}
+
+.footer-botones-detalle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.btn-volver-tabla-detalle {
+  background-color: transparent;
+  color: #fcf2e9;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.btn-volver-tabla-detalle:hover {
+  background-color: #fcf2e9;
+  color: #171614;
+}
+
+.btn-editar-detalle {
+  background-color: #ab1d19;
+  color: #ffffff;
+  padding: 8px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.btn-editar-detalle:hover {
+  background-color: #ee1a0e;
+}
+
+@media (max-width: 768px) {
+  .col-info-detalle {
+    padding: 24px;
+  }
+}

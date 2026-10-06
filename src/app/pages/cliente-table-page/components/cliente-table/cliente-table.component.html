@@ -1,0 +1,73 @@
+<div class="tabla-contenedor-responsive">
+  <table class="tabla-elwey">
+    <thead>
+      <tr>
+        <th class="col-id">ID</th>
+        <th>Nombre</th>
+        <th>Correo Electrónico</th>
+        <th>Teléfono</th>
+        <th>Dirección</th>
+        <th class="col-estado">Estado</th>
+        <th class="col-acciones">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (cliente of clienteArray(); track cliente.id) {
+        <tr>
+          <!-- ID -->
+          <td class="celda-id">
+            #{{ cliente.id }}
+          </td>
+
+          <!-- Nombre -->
+          <td>
+            <strong class="nombre-cliente">{{ cliente.nombre }}</strong>
+          </td>
+
+          <!-- Correo -->
+          <td class="celda-correo">
+            {{ cliente.correo }}
+          </td>
+
+          <!-- Teléfono -->
+          <td class="celda-telefono">
+            {{ cliente.telefono }}
+          </td>
+
+          <!-- Dirección -->
+          <td class="celda-direccion">
+            {{ cliente.direccion }}
+          </td>
+
+          <!-- Estado -->
+          <td class="celda-estado">
+            <span class="badge-estado" [class.badge-activo]="cliente.activo" [class.badge-inactivo]="!cliente.activo">
+              {{ cliente.activo ? 'ACTIVO' : 'INACTIVO' }}
+            </span>
+          </td>
+
+          <!-- Acciones -->
+          <td class="celda-acciones">
+            <div class="grupo-acciones">
+              <button type="button" (click)="verDetalleCliente(cliente)" class="btn-accion btn-detalle" title="Ver detalle">
+                Ver detalle
+              </button>
+              <a [routerLink]="['/clientes/editar', cliente.id]" class="btn-accion btn-editar" title="Editar">
+                Editar
+              </a>
+              <button type="button" (click)="eliminarCliente(cliente)" class="btn-accion btn-eliminar" title="Eliminar">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="7" class="celda-vacia">
+            No se encontraron clientes registrados en el sistema.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

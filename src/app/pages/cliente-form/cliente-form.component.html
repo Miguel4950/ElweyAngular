@@ -1,0 +1,160 @@
+<app-navbar></app-navbar>
+
+<main class="main-crear-cliente">
+  <div class="crear-cliente-container">
+    <div class="crear-cliente-card">
+      
+      <div class="crear-cliente-header">
+        <h1 class="crear-cliente-titulo">
+          {{ isEdit ? 'Modificar Cliente' : 'Registrar Cliente' }}
+        </h1>
+      </div>
+      <div class="crear-cliente-divider"></div>
+
+      <form [formGroup]="clienteForm" (ngSubmit)="handleSubmit()" class="crear-cliente-form">
+
+        <!-- Nombre Completo -->
+        <div class="campo-grupo">
+          <label for="nombre" class="campo-label">Nombre Completo *</label>
+          <input
+            id="nombre"
+            type="text"
+            formControlName="nombre"
+            class="campo-input"
+            placeholder="Ej: Juan Carlos Pérez"
+          />
+          @if (clienteForm.get('nombre')?.touched && clienteForm.get('nombre')?.invalid) {
+            <div class="campo-error-contenedor">
+              @if (clienteForm.get('nombre')?.errors?.['required']) {
+                <span class="campo-error">El nombre es obligatorio.</span>
+              }
+              @if (clienteForm.get('nombre')?.errors?.['minlength']) {
+                <span class="campo-error">El nombre debe tener al menos 3 caracteres.</span>
+              }
+              @if (clienteForm.get('nombre')?.errors?.['pattern']) {
+                <span class="campo-error">El nombre solo puede contener letras.</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Fila: Correo y Teléfono -->
+        <div class="fila-dos-campos">
+          <!-- Correo Electrónico -->
+          <div class="campo-grupo">
+            <label for="correo" class="campo-label">Correo Electrónico *</label>
+            <input
+              id="correo"
+              type="email"
+              formControlName="correo"
+              class="campo-input"
+              placeholder="cliente@ejemplo.com"
+            />
+            @if (clienteForm.get('correo')?.touched && clienteForm.get('correo')?.invalid) {
+              <div class="campo-error-contenedor">
+                @if (clienteForm.get('correo')?.errors?.['required']) {
+                  <span class="campo-error">El correo es obligatorio.</span>
+                }
+                @if (clienteForm.get('correo')?.errors?.['email']) {
+                  <span class="campo-error">Formato de correo no válido.</span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Teléfono -->
+          <div class="campo-grupo">
+            <label for="telefono" class="campo-label">Teléfono Móvil *</label>
+            <input
+              id="telefono"
+              type="text"
+              formControlName="telefono"
+              class="campo-input"
+              placeholder="3101234567"
+            />
+            @if (clienteForm.get('telefono')?.touched && clienteForm.get('telefono')?.invalid) {
+              <div class="campo-error-contenedor">
+                @if (clienteForm.get('telefono')?.errors?.['required']) {
+                  <span class="campo-error">El teléfono es obligatorio.</span>
+                }
+                @if (clienteForm.get('telefono')?.errors?.['pattern']) {
+                  <span class="campo-error">Formato telefónico no válido (7 a 15 dígitos).</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Fila: Contraseña y Estado -->
+        <div class="fila-dos-campos">
+          <!-- Contraseña -->
+          <div class="campo-grupo">
+            <label for="contrasena" class="campo-label">Contraseña *</label>
+            <input
+              id="contrasena"
+              type="password"
+              formControlName="contrasena"
+              class="campo-input"
+              placeholder="Mínimo 4 caracteres"
+            />
+            @if (clienteForm.get('contrasena')?.touched && clienteForm.get('contrasena')?.invalid) {
+              <div class="campo-error-contenedor">
+                @if (clienteForm.get('contrasena')?.errors?.['required']) {
+                  <span class="campo-error">La contraseña es obligatoria.</span>
+                }
+                @if (clienteForm.get('contrasena')?.errors?.['minlength']) {
+                  <span class="campo-error">La contraseña debe tener mínimo 4 caracteres.</span>
+                }
+              </div>
+            }
+          </div>
+
+          <!-- Estado Activo / Inactivo -->
+          <div class="campo-grupo">
+            <label for="activo" class="campo-label">Estado de Cuenta *</label>
+            <select id="activo" formControlName="activo" class="campo-input campo-select">
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dirección de Residencia -->
+        <div class="campo-grupo">
+          <label for="direccion" class="campo-label">Dirección de Entrega *</label>
+          <input
+            id="direccion"
+            type="text"
+            formControlName="direccion"
+            class="campo-input"
+            placeholder="Ej: Calle 100 # 15-34, Bogotá"
+          />
+          @if (clienteForm.get('direccion')?.touched && clienteForm.get('direccion')?.invalid) {
+            <div class="campo-error-contenedor">
+              @if (clienteForm.get('direccion')?.errors?.['required']) {
+                <span class="campo-error">La dirección es obligatoria.</span>
+              }
+              @if (clienteForm.get('direccion')?.errors?.['minlength']) {
+                <span class="campo-error">La dirección debe tener al menos 5 caracteres.</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Botones de Acción -->
+        <div class="crear-cliente-acciones">
+          <a [routerLink]="['/clientes']" class="btn-cancelar">
+            Cancelar
+          </a>
+          <button type="submit" [disabled]="!clienteForm.valid" class="btn-crear">
+            {{ isEdit ? 'Actualizar Cliente' : 'Registrar Cliente' }}
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

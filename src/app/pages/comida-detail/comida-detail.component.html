@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+
+<main class="main-detalle">
+  <div class="container-detalle">
+
+    @if (comida) {
+      <!-- Breadcrumb Navigation -->
+      <div class="breadcrumb-detalle-nav">
+        <a [routerLink]="['/']" class="breadcrumb-item-link">Inicio</a>
+        <span>/</span>
+        <a [routerLink]="['/comidas']" class="breadcrumb-item-link">Inventario</a>
+        <span>/</span>
+        <span class="breadcrumb-item-activo">{{ comida.nombre }}</span>
+      </div>
+
+      <!-- Card Detalle Wrapper -->
+      <div class="card-detalle-wrapper">
+
+        <!-- Columna Izquierda: Imagen & Badge -->
+        <div class="col-imagen-detalle">
+          <img [src]="comida.imagen_url" [alt]="comida.nombre" class="img-plato-detalle" />
+          <span class="badge-detalle-tag" [class.badge-detalle-verde]="comida.etiqueta === 'Vegano' || comida.etiqueta === 'Favorito' || comida.etiqueta === 'Top Ventas' || comida.etiqueta === 'Clásico'">
+            {{ comida.etiqueta }}
+          </span>
+        </div>
+
+        <!-- Columna Derecha: Información del Plato (Subcomponente fraccionado) -->
+        <app-comida-info-detalle [comida]="comida"></app-comida-info-detalle>
+
+      </div>
+    } @else {
+      <div class="no-encontrado">
+        <h2>Plato no encontrado</h2>
+        <p>No se encontró ninguna comida con el ID especificado en la base de datos quemada.</p>
+        <a [routerLink]="['/comidas']" class="btn-volver-tabla-detalle">Volver al Inventario</a>
+      </div>
+    }
+
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

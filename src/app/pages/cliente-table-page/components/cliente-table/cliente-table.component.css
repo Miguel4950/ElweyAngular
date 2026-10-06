@@ -1,0 +1,168 @@
+.tabla-contenedor-responsive {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 6px;
+  border: 1px solid #282420;
+  background-color: #1a1716;
+}
+
+.tabla-elwey {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.tabla-elwey thead th {
+  background-color: #ab1d19;
+  color: #ffffff;
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #ee1a0e;
+}
+
+.tabla-elwey tbody td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  color: #fcf2e9;
+  vertical-align: middle;
+}
+
+.tabla-elwey tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.col-id,
+.celda-id {
+  width: 50px;
+  text-align: center;
+  color: #8c8278;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.nombre-cliente {
+  display: block;
+  font-size: 15px;
+  color: #fcf2e9;
+}
+
+.celda-correo {
+  color: #d8ccc3;
+  font-size: 13px;
+}
+
+.celda-telefono {
+  color: #a89f95;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.celda-direccion {
+  color: #a89f95;
+  font-size: 13px;
+  max-width: 250px;
+}
+
+.col-estado,
+.celda-estado {
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-estado {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.badge-activo {
+  background-color: rgba(46, 125, 50, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.badge-inactivo {
+  background-color: rgba(171, 29, 25, 0.2);
+  color: #ee1a0e;
+  border: 1px solid rgba(238, 26, 14, 0.4);
+}
+
+.col-acciones,
+.celda-acciones {
+  white-space: nowrap;
+}
+
+.grupo-acciones {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.btn-accion {
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.btn-detalle {
+  background-color: transparent;
+  color: #fcf2e9;
+  border: 1px solid rgba(252, 242, 233, 0.3);
+}
+
+.btn-detalle:hover {
+  background-color: #fcf2e9;
+  color: #171614;
+}
+
+.btn-editar {
+  background-color: #ab1d19;
+  color: #ffffff;
+}
+
+.btn-editar:hover {
+  background-color: #ee1a0e;
+}
+
+.btn-eliminar {
+  background-color: transparent;
+  color: #ee1a0e;
+  border: 1px solid rgba(238, 26, 14, 0.5);
+}
+
+.btn-eliminar:hover {
+  background-color: #ee1a0e;
+  color: #ffffff;
+}
+
+.celda-vacia {
+  text-align: center;
+  padding: 40px !important;
+  color: #8c8278;
+  font-style: italic;
+}

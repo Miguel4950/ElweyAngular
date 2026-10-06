@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.seccion-adicionales {
+  margin-bottom: 24px;
+}
+
+.encabezado-adicionales {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-size: 11px;
+}
+
+.titulo-acomp-seccion {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #fcf2e9;
+}
+
+.subtitulo-acomp-seccion {
+  color: #8c8278;
+}
+
+.lista-adicionales {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-acomp-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.item-acomp-row:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.info-acomp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-acomp {
+  accent-color: #ee1a0e;
+  cursor: pointer;
+}
+
+.texto-acomp-nombre {
+  font-size: 13px;
+  color: #e5dacd;
+}
+
+.badge-acomp-incluido {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ee1a0e;
+}
+
+.sin-adicionales {
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 4px;
+  font-size: 12px;
+  color: #8c8278;
+  text-align: center;
+}

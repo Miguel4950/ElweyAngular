@@ -1,0 +1,92 @@
+/* ==============================================================================
+   HOJA DE ESTILOS GENERAL Y COMPARTIDA: styles.css
+   PROYECTO: Restaurante El Wey
+   Contiene el diseño base, tipografía, navbar, footer y elementos comunes
+   ============================================================================== */
+
+:root {
+  --elwey-dark: #1a120f;
+  --elwey-card: #1b1412;
+  --elwey-border: rgba(255, 255, 255, 0.08);
+  --elwey-red: #ab1d19;
+  --elwey-red-hover: #ee1a0e;
+  --elwey-input: rgba(255, 255, 255, 0.02);
+  --elwey-light: #f5efe7;
+  --elwey-muted: #d8ccc3;
+}
+
+/* ------------------------------------------------------------------------------
+   A. RESET GENERAL Y CONFIGURACION BASE
+   ------------------------------------------------------------------------------ */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  background-color: #171614;
+  color: #fcf2e9;
+  font-family: 'Poppins', Arial, sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+}
+
+.pagina-completa {
+  background-color: #171614;
+  color: #fcf2e9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.seccion-principal-fondo {
+  background-color: #171614;
+}
+
+/* ------------------------------------------------------------------------------
+   B. TIPOGRAFIA Y GOOGLE FONTS (ABRIL FATFACE, MONTSERRAT Y POPPINS)
+   ------------------------------------------------------------------------------ */
+h1,
+h2,
+h3 {
+  font-family: 'Abril Fatface', 'Montserrat', Georgia, serif;
+  font-weight: 400;
+  color: #fcf2e9;
+  margin: 0 0 15px 0;
+  letter-spacing: 1px;
+}
+
+h2.titulo-con-subrayado {
+  text-decoration: underline #ab1d19;
+}
+
+.etiqueta-subtitulo {
+  color: #ee1a0e;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.titulo-nosotros,
+.titulo-seccion {
+  font-family: 'Abril Fatface', 'Montserrat', serif;
+  font-size: 52px;
+  line-height: 1.15;
+  color: #fcf2e9;
+  margin: 10px 0 25px 0;
+}
+
+p {
+  color: #d1c7bd;
+  margin-bottom: 15px;
+}
+
+

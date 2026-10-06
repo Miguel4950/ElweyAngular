@@ -1,0 +1,39 @@
+<div class="col-info-detalle">
+  @if (comida(); as c) {
+    <div>
+      <p class="subtitulo-detalle-ficha">
+        Categoría: <span>{{ c.categoria ? c.categoria.nombre : 'General' }}</span>
+      </p>
+      <h1 class="titulo-detalle-plato">{{ c.nombre }}</h1>
+
+      <!-- Badge especial si es la favorita de jaimes -->
+      @if (c.id === 8 || c.nombre.toLowerCase().includes('jaime')) {
+        <div class="badge-jaime-favorita">
+          (La favorita de jaimes)
+        </div>
+      }
+
+      <!-- Precio -->
+      <div class="fila-precio-detalle">
+        <span class="precio-grande-detalle">${{ c.precio | number:'1.0-0' }}</span>
+        <span class="precio-unidad-detalle">/ Porción</span>
+      </div>
+
+      <!-- Descripción -->
+      <p class="desc-completa-detalle">{{ c.descripcion }}</p>
+
+      <!-- Adicionales Disponibles (Subcomponente fraccionado) -->
+      <app-comida-adicionales [categoria]="c.categoria"></app-comida-adicionales>
+    </div>
+
+    <!-- Botones de Acción Inferiores -->
+    <div class="footer-botones-detalle">
+      <a [routerLink]="['/comidas']" class="btn-volver-tabla-detalle">
+        &larr; Volver al Catálogo
+      </a>
+      <a [routerLink]="['/comidas/editar', c.id]" class="btn-editar-detalle">
+        Editar este Plato
+      </a>
+    </div>
+  }
+</div>

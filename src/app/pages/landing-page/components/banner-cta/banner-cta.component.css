@@ -1,0 +1,88 @@
+.subseccion-gradiente {
+  background: linear-gradient(135deg, #491a12 0%, #ab1d19 50%, #491a12 100%);
+  padding: 85px 20px;
+  text-align: center;
+}
+
+.contenedor-banner-cta {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.logo-banner-cta {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fcf2e9;
+  margin-bottom: 22px;
+  cursor: pointer;
+  transition: transform 0.35s cubic-bezier(0.25, 0.8, 0.25, 1), 
+              box-shadow 0.35s ease, 
+              filter 0.35s ease;
+}
+
+.logo-banner-cta:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.75), 0 0 50px rgba(252, 242, 233, 0.45);
+  filter: brightness(1.12);
+}
+
+.titulo-banner-cta {
+  font-family: 'Abril Fatface', 'Montserrat', serif;
+  font-size: 52px;
+  line-height: 1.15;
+  color: #fcf2e9;
+  margin-bottom: 16px;
+}
+
+.descripcion-banner-cta {
+  color: #fcf2e9;
+  font-size: 17px;
+  margin-bottom: 30px;
+}
+
+.contenedor-botones-banner {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.btn-banner-blanco {
+  background-color: #fcf2e9;
+  color: #ab1d19;
+  text-decoration: none;
+  padding: 14px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  border: 2px solid #fcf2e9;
+  transition: all 0.2s ease;
+}
+
+.btn-banner-blanco:hover {
+  background-color: #ffffff;
+  color: #ee1a0e;
+}
+
+.btn-banner-borde {
+  background-color: transparent;
+  color: #fcf2e9;
+  text-decoration: none;
+  padding: 14px 28px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  border: 2px solid #fcf2e9;
+  transition: all 0.2s ease;
+}
+
+.btn-banner-borde:hover {
+  border-color: #fcf2e9;
+  color: #ffffff;
+}

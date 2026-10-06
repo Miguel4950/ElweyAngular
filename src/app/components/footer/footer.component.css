@@ -1,0 +1,126 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+#pie-pagina {
+  background-color: #0f0d0c;
+  padding: 30px 20px;
+}
+
+.contenedor-footer {
+  max-width: 1150px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.marca-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.img-logo-footer {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #ab1d19;
+  display: block;
+}
+
+.texto-logo-footer {
+  font-family: 'Abril Fatface', 'Montserrat', serif;
+  font-size: 22px;
+  color: #fcf2e9;
+}
+
+.centro-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.texto-copyright-footer {
+  color: #6b635b;
+  font-size: 13px;
+  margin: 0;
+  text-align: center;
+}
+
+.slogan-footer {
+  color: #4f4842;
+  font-size: 13px;
+}
+
+.redes {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.redes a {
+  color: #fcf2e9;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.redes a:hover {
+  color: #ee1a0e;
+  opacity: 1;
+  transform: scale(1.25);
+}
+
+.redes a svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1e1a19;
+  border: 1px solid rgba(252, 242, 233, 0.15);
+  padding: 9px 18px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #fcf2e9;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.social-pill:hover {
+  border-color: #ee1a0e;
+  background: #2a201e;
+  color: #ee1a0e;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(238, 26, 14, 0.25);
+}
+
+.social-pill svg {
+  width: 16px;
+  height: 16px;
+  fill: #ee1a0e;
+}
+
+@media (max-width: 768px) {
+  .contenedor-footer {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+}

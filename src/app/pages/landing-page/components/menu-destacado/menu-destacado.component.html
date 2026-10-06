@@ -1,0 +1,39 @@
+<!-- =========================================================================
+     SECCION DE MENU CON CSS GRID Y DATOS DINAMICOS
+     ========================================================================= -->
+<section id="menu">
+  <div class="contenedor-seccion-menu">
+    <div class="encabezado-seccion">
+      <span class="etiqueta-subtitulo">Lo que más pedimos</span>
+      <h2 class="titulo-nosotros">Nuestros Clásicos</h2>
+    </div>
+
+    <div class="contenedor-grid">
+      @for (item of comidaArray(); track $index) {
+        <article class="tarjeta-plato">
+          <img [src]="item.imagen_url" [alt]="item.nombre"
+            width="240" height="180" class="img-plato" />
+          <div class="contenido-plato">
+            <span class="etiqueta-plato"
+              [class.etiqueta-verde]="item.etiqueta === 'Vegano' || item.etiqueta === 'Favorito' || item.etiqueta === 'Top Ventas' || item.etiqueta === 'Clásico'"
+              [class.etiqueta-roja]="item.etiqueta !== 'Vegano' && item.etiqueta !== 'Favorito' && item.etiqueta !== 'Top Ventas' && item.etiqueta !== 'Clásico'">
+              {{ item.etiqueta }}
+            </span>
+            <h3>{{ item.nombre }}</h3>
+            <p>{{ item.descripcion }}</p>
+            <div class="fila-precio">
+              <span class="texto-precio">${{ item.precio | number:'1.0-0' }}</span>
+              <a [routerLink]="['/comidas', item.id]" class="enlace-pedir">VER DETALLE &rarr;</a>
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+
+    <!-- Botones de Acción al Menú Completo -->
+    <div class="contenedor-btn-menu">
+      <a [routerLink]="['/comidas/tarjetas']" class="btn-ver-menu-completo">Ver Todas en Tarjetas</a>
+      <a [routerLink]="['/comidas/tabla']" class="btn-ver-menu-completo btn-ver-menu-tabla">Ver Todas en Tabla</a>
+    </div>
+  </div>
+</section>

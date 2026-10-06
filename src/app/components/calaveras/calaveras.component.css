@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.borde-calaveras {
+  width: 100%;
+  height: 40px;
+  display: block;
+  background: linear-gradient(90deg, #006847 0%, #ffffff 50%, #ce1126 100%);
+  -webkit-mask-image: url("/images/calavera.png");
+  mask-image: url("/images/calavera.png");
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: auto 100%;
+  mask-size: auto 100%;
+}

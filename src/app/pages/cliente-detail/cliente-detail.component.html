@@ -1,0 +1,75 @@
+<app-navbar></app-navbar>
+
+<main class="main-detalle">
+  <div class="container-detalle">
+
+    @if (cliente) {
+      <!-- Breadcrumb Navigation -->
+      <div class="breadcrumb-detalle-nav">
+        <a [routerLink]="['/']" class="breadcrumb-item-link">Inicio</a>
+        <span>/</span>
+        <a [routerLink]="['/clientes']" class="breadcrumb-item-link">Clientes</a>
+        <span>/</span>
+        <span class="breadcrumb-item-activo">{{ cliente.nombre }}</span>
+      </div>
+
+      <!-- Card Detalle Wrapper -->
+      <div class="card-detalle-wrapper">
+        <div class="col-info-detalle">
+          
+          <div class="header-info-cliente">
+            <p class="subtitulo-detalle-ficha">
+              FICHA DE CLIENTE <span>#{{ cliente.id }}</span>
+            </p>
+            <h1 class="titulo-detalle-cliente">{{ cliente.nombre }}</h1>
+            <span class="badge-estado" [class.badge-activo]="cliente.activo" [class.badge-inactivo]="!cliente.activo">
+              {{ cliente.activo ? 'CLIENTE ACTIVO' : 'CLIENTE INACTIVO' }}
+            </span>
+          </div>
+
+          <div class="cuadricula-datos-cliente">
+            <div class="dato-bloque">
+              <span class="dato-etiqueta">Correo Electrónico</span>
+              <span class="dato-valor">{{ cliente.correo }}</span>
+            </div>
+
+            <div class="dato-bloque">
+              <span class="dato-etiqueta">Teléfono Móvil</span>
+              <span class="dato-valor">{{ cliente.telefono }}</span>
+            </div>
+
+            <div class="dato-bloque">
+              <span class="dato-etiqueta">Dirección de Entrega</span>
+              <span class="dato-valor">{{ cliente.direccion }}</span>
+            </div>
+
+            <div class="dato-bloque">
+              <span class="dato-etiqueta">Pedidos Realizados</span>
+              <span class="dato-valor">{{ cliente.pedidos.length }} pedidos registrados</span>
+            </div>
+          </div>
+
+          <div class="footer-botones-detalle">
+            <a [routerLink]="['/clientes']" class="btn-volver-tabla-detalle">
+              &larr; Volver a la Lista
+            </a>
+            <a [routerLink]="['/clientes/editar', cliente.id]" class="btn-editar-detalle">
+              Modificar Datos
+            </a>
+          </div>
+
+        </div>
+      </div>
+    } @else {
+      <div class="no-encontrado">
+        <h2>Cliente no encontrado</h2>
+        <p>No se encontró ningún cliente con el ID especificado en la base de datos simulada.</p>
+        <a [routerLink]="['/clientes']" class="btn-volver-tabla-detalle">Volver a Clientes</a>
+      </div>
+    }
+
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

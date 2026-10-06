@@ -1,0 +1,77 @@
+<div class="tabla-contenedor-responsive">
+  <table class="tabla-elwey">
+    <thead>
+      <tr>
+        <th>Foto</th>
+        <th>Nombre y Categoría</th>
+        <th>Descripción</th>
+        <th>Precio</th>
+        <th class="col-estado">Estado</th>
+        <th class="col-acciones">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (comida of comidaArray(); track $index) {
+        <tr>
+          <!-- Foto -->
+          <td class="celda-foto">
+            @if (comida.imagen_url) {
+              <img [src]="comida.imagen_url" [alt]="comida.nombre" [width]="ancho" [height]="alto" class="img-miniatura" />
+            } @else {
+              <div class="sin-foto">Sin foto</div>
+            }
+          </td>
+
+          <!-- Nombre & Categoría -->
+          <td>
+            <strong class="nombre-comida">{{ comida.nombre }}</strong>
+            <div class="meta-comida">
+              <span class="badge-etiqueta" [class.badge-verde]="comida.etiqueta === 'Vegano' || comida.etiqueta === 'Favorito' || comida.etiqueta === 'Top Ventas' || comida.etiqueta === 'Clásico'">
+                {{ comida.etiqueta }}
+              </span>
+              <span class="nombre-categoria">({{ comida.categoria ? comida.categoria.nombre : 'General' }})</span>
+            </div>
+          </td>
+
+          <!-- Descripción -->
+          <td class="celda-desc">
+            {{ comida.descripcion }}
+          </td>
+
+          <!-- Precio -->
+          <td class="celda-precio">
+            ${{ comida.precio | number:'1.0-0' }}
+          </td>
+
+          <!-- Estado -->
+          <td class="celda-estado">
+            <span class="badge-estado" [class.badge-activo]="comida.activo" [class.badge-inactivo]="!comida.activo">
+              {{ comida.activo ? 'ACTIVO' : 'INACTIVO' }}
+            </span>
+          </td>
+
+          <!-- Acciones -->
+          <td class="celda-acciones">
+            <div class="grupo-acciones">
+              <button type="button" (click)="verDetalleComida(comida)" class="btn-accion btn-detalle" title="Ver detalle">
+                Ver detalle
+              </button>
+              <a [routerLink]="['/comidas/editar', comida.id]" class="btn-accion btn-editar" title="Editar">
+                Editar
+              </a>
+              <button type="button" (click)="eliminarComida(comida)" class="btn-accion btn-eliminar" title="Eliminar">
+                Eliminar
+              </button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="celda-vacia">
+            No se encontraron comidas en el inventario.
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

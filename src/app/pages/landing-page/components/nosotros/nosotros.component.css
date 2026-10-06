@@ -1,0 +1,84 @@
+#nosotros {
+  padding: 80px 20px;
+  max-width: 1150px;
+  margin: 0 auto;
+}
+
+.contenedor-nosotros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 50px;
+}
+
+.columna-texto-nosotros {
+  flex: 1.1;
+  min-width: 320px;
+}
+
+.etiqueta-subtitulo {
+  color: #ee1a0e;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.titulo-nosotros {
+  font-family: 'Abril Fatface', 'Montserrat', serif;
+  font-size: 52px;
+  line-height: 1.15;
+  color: #fcf2e9;
+  margin: 10px 0 25px 0;
+}
+
+.contenedor-estadisticas {
+  display: flex;
+  gap: 35px;
+  margin-top: 30px;
+}
+
+.item-estadistica {
+  display: flex;
+  flex-direction: column;
+}
+
+.numero-estadistica {
+  font-family: 'Abril Fatface', 'Montserrat', serif;
+  font-size: 34px;
+  color: #ee1a0e;
+  display: block;
+  line-height: 1;
+}
+
+.etiqueta-estadistica {
+  font-size: 11px;
+  font-weight: 700;
+  color: #a89f95;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 6px;
+  display: block;
+}
+
+.columna-imagen-nosotros {
+  flex: 0.9;
+  min-width: 300px;
+}
+
+.img-nosotros-estilo {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 2px solid #ab1d19;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .contenedor-nosotros {
+    flex-direction: column;
+  }
+}
