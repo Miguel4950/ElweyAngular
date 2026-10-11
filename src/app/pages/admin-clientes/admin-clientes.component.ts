@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { mergeMap } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
@@ -132,30 +133,27 @@ export class AdminClientesComponent implements OnInit {
       pass,
     );
 
-    // 1. Enviar petición PUT /clientes/update o POST /clientes/add según corresponda
-    if (this.editClienteId) {
-      this.clienteService.updateCliente(this.editClienteId, payload).subscribe({
-        next: () => {
-          this.mensajeFeedback = `Cliente #${this.editClienteId} actualizado con éxito.`;
+    // 1. Enviar petición PUT /clientes/update o POST /clientes/add y encadenar findAll() con mergeMap
+    const idEditado = this.editClienteId;
+    const peticion$ = idEditado
+      ? this.clienteService.updateCliente(idEditado, payload)
+      : this.clienteService.addCliente(payload);
+
+    peticion$
+      .pipe(mergeMap(() => this.clienteService.findAll()))
+      .subscribe({
+        next: (clientesActualizados) => {
+          this.clientes = clientesActualizados;
+          this.mensajeFeedback = idEditado
+            ? `Cliente #${idEditado} actualizado con éxito.`
+            : 'Nuevo cliente registrado con éxito.';
           this.cancelarFormulario();
-          this.cargarClientes();
         },
         error: (err) => {
-          this.errorMessage = err?.error?.mensaje || 'Error al actualizar el cliente.';
+          this.errorMessage =
+            err?.error?.mensaje || 'Error al guardar el cliente en el servidor.';
         },
       });
-    } else {
-      this.clienteService.addCliente(payload).subscribe({
-        next: () => {
-          this.mensajeFeedback = 'Nuevo cliente registrado con éxito.';
-          this.cancelarFormulario();
-          this.cargarClientes();
-        },
-        error: (err) => {
-          this.errorMessage = err?.error?.mensaje || 'Error al registrar el cliente.';
-        },
-      });
-    }
   }
 
   eliminarCliente(cli: Cliente): void {

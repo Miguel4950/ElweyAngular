@@ -61,8 +61,9 @@ export class RegistroComponent {
 
     // 2. Registrar cliente mediante POST /clientes/add y redirigir a su portal
     this.clienteService.addCliente(nuevoCliente).subscribe({
-      next: () => {
+      next: (creado) => {
         this.errorMessage = '';
+        this.clienteService.setClienteActual(creado, 'CLIENTE');
         this.router.navigate(['/cliente/portal'], { queryParams: { bienvenido: 'true' } });
       },
       error: (err) => {

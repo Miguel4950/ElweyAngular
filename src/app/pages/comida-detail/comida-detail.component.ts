@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { map, mergeMap, of } from 'rxjs';
+import { mergeMap } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
@@ -38,27 +38,15 @@ export class ComidaDetailComponent implements OnInit {
     this.comidaService
       .findById(this.comidaId)
       .pipe(
-        mergeMap((plato) => {
-          if (plato && plato.categoria && plato.categoria.id) {
-            return this.adicionalService
-              .findByCategoria(plato.categoria.id)
-              .pipe(
-                map((adicionales) => {
-                  plato.categoria.adicionales = adicionales;
-                  return plato;
-                }),
-              );
-          }
-          return of(plato);
+        mergeMap((comidaInfo) => {
+          this.comida = comidaInfo;
+          return this.adicionalService.findByCategoria(comidaInfo.categoria.id);
         }),
       )
-      .subscribe({
-        next: (platoCompleto) => {
-          this.comida = platoCompleto;
-        },
-        error: () => {
-          this.comida = undefined;
-        },
+      .subscribe((adicionalesList) => {
+        if (this.comida && this.comida.categoria) {
+          this.comida.categoria.adicionales = adicionalesList;
+        }
       });
   }
 }

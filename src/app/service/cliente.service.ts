@@ -1,21 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ClienteService {
-  // 1. Inyección de HttpClient y estado reactivo de la sesión con BehaviorSubject
+  // 1. Inyección de HttpClient para consumir el API REST de clientes en Spring Boot
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/clientes';
 
-  private clienteActualSubject = new BehaviorSubject<Cliente | null>(null);
-  clienteActual$ = this.clienteActualSubject.asObservable();
-
-  private rolActualSubject = new BehaviorSubject<string>('CLIENTE');
-  rolActual$ = this.rolActualSubject.asObservable();
+  private clienteActual: Cliente | null = null;
+  private rolActual: string = 'CLIENTE';
 
   // http://localhost:8080/clientes/all
   findAll(): Observable<Cliente[]> {
@@ -28,75 +25,44 @@ export class ClienteService {
   }
 
   // http://localhost:8080/clientes/login
-  autenticar(correo: string, contrasena: string, rolSeleccionado: string = 'CLIENTE'): Observable<Cliente> {
-    return this.http
-      .post<Cliente>(`${this.apiUrl}/login`, {
-        email: correo,
-        password: contrasena,
-      })
-      .pipe(
-        tap((cliente) => {
-          this.clienteActualSubject.next(cliente);
-          const correoLimpio = (cliente.correo || cliente.email || '').toLowerCase();
-          if (correoLimpio === 'admin@elwey.com') {
-            this.rolActualSubject.next('ADMIN');
-          } else if (correoLimpio === 'operador@elwey.com') {
-            this.rolActualSubject.next('OPERADOR');
-          } else {
-            this.rolActualSubject.next(rolSeleccionado || 'CLIENTE');
-          }
-        }),
-      );
+  autenticar(correo: string, contrasena: string): Observable<Cliente> {
+    return this.http.post<Cliente>(`${this.apiUrl}/login`, {
+      email: correo,
+      password: contrasena,
+    });
   }
 
   // http://localhost:8080/clientes/add
   addCliente(cliente: Cliente): Observable<Cliente> {
-    return this.http.post<Cliente>(`${this.apiUrl}/add`, cliente).pipe(
-      tap((creado) => {
-        this.clienteActualSubject.next(creado);
-        this.rolActualSubject.next('CLIENTE');
-      }),
-    );
+    return this.http.post<Cliente>(`${this.apiUrl}/add`, cliente);
   }
 
   // http://localhost:8080/clientes/update
   updateCliente(id: number, cliente: Cliente): Observable<Cliente> {
     cliente.id = id;
-    return this.http.put<Cliente>(`${this.apiUrl}/update`, cliente).pipe(
-      tap((actualizado) => {
-        if (this.clienteActualSubject.value?.id === id) {
-          this.clienteActualSubject.next(actualizado);
-        }
-      }),
-    );
+    return this.http.put<Cliente>(`${this.apiUrl}/update`, cliente);
   }
 
   // http://localhost:8080/clientes/delete/1
   deleteById(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`).pipe(
-      tap(() => {
-        if (this.clienteActualSubject.value?.id === id) {
-          this.clienteActualSubject.next(null);
-        }
-      }),
-    );
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
   getClienteActual(): Cliente | null {
-    return this.clienteActualSubject.value;
+    return this.clienteActual;
   }
 
   setClienteActual(cliente: Cliente | null, rol: string = 'CLIENTE'): void {
-    this.clienteActualSubject.next(cliente);
-    this.rolActualSubject.next(rol);
+    this.clienteActual = cliente;
+    this.rolActual = rol;
   }
 
   getRolActual(): string {
-    return this.rolActualSubject.value;
+    return this.rolActual;
   }
 
   cerrarSesion(): void {
-    this.clienteActualSubject.next(null);
-    this.rolActualSubject.next('CLIENTE');
+    this.clienteActual = null;
+    this.rolActual = 'CLIENTE';
   }
 }

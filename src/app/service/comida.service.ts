@@ -25,9 +25,7 @@ export class ComidaService {
 
   // http://localhost:8080/comidas/buscar?q=taco
   buscarPorNombre(query: string): Observable<Comida[]> {
-    return this.http.get<Comida[]>(`${this.apiUrl}/buscar`, {
-      params: { q: query || '' },
-    });
+    return this.http.get<Comida[]>(`${this.apiUrl}/buscar?q=${query || ''}`);
   }
 
   // http://localhost:8080/comidas/add

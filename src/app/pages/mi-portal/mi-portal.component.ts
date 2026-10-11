@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
-import { mergeMap, of } from 'rxjs';
+import { mergeMap } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
@@ -65,18 +65,18 @@ export class MiPortalComponent implements OnInit {
     this.clienteService
       .findById(targetId)
       .pipe(
-        mergeMap((cli) => {
-          this.cliente = cli;
+        mergeMap((clienteInfo) => {
+          this.cliente = clienteInfo;
           if (!sesionActual) {
-            this.clienteService.setClienteActual(cli);
+            this.clienteService.setClienteActual(clienteInfo);
           }
-          this.cargarFormulario(cli);
-          return cli && cli.id ? this.pedidoService.findByCliente(cli.id) : of([]);
+          this.cargarFormulario(clienteInfo);
+          return this.pedidoService.findByCliente(clienteInfo.id);
         }),
       )
       .subscribe({
-        next: (pedidos) => {
-          this.pedidosCliente = pedidos;
+        next: (pedidosList) => {
+          this.pedidosCliente = pedidosList;
         },
         error: () => {
           this.errorMessage = 'No se pudo cargar la información del cliente desde el servidor.';
@@ -128,6 +128,7 @@ export class MiPortalComponent implements OnInit {
     this.clienteService.updateCliente(this.cliente.id, clienteActualizado).subscribe({
       next: (res) => {
         this.cliente = res;
+        this.clienteService.setClienteActual(res, this.clienteService.getRolActual());
         this.cargarFormulario(res);
         this.mensajeActualizado = true;
         this.mensajeBienvenido = false;
@@ -160,6 +161,7 @@ export class MiPortalComponent implements OnInit {
     if (confirmado) {
       const idAEliminar = this.cliente.id;
       this.clienteService.deleteById(idAEliminar).subscribe(() => {
+        this.clienteService.cerrarSesion();
         this.router.navigate(['/']);
       });
     }

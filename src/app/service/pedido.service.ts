@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Pedido } from '../models/pedido.model';
 
@@ -33,18 +33,14 @@ export class PedidoService {
     adicionalesIds: number[] = [],
     cantidad: number = 1,
   ): Observable<Pedido> {
-    let params = new HttpParams()
-      .set('comidaId', comidaId.toString())
-      .set('cantidad', cantidad.toString());
-
+    let url = `${this.apiUrl}/ordenar?comidaId=${comidaId}&cantidad=${cantidad}`;
     if (clienteId) {
-      params = params.set('clienteId', clienteId.toString());
+      url += `&clienteId=${clienteId}`;
     }
     for (const adId of adicionalesIds) {
-      params = params.append('adicionalesIds', adId.toString());
+      url += `&adicionalesIds=${adId}`;
     }
-
-    return this.http.post<Pedido>(`${this.apiUrl}/ordenar`, null, { params });
+    return this.http.post<Pedido>(url, {});
   }
 
   // http://localhost:8080/pedidos/1/estado

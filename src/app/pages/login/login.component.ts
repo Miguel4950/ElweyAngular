@@ -112,14 +112,18 @@ export class LoginComponent implements OnInit {
     }
 
     // 4. Autenticación estándar por correo electrónico contra POST /clientes/login
-    this.clienteService.autenticar(identificador, password, rol).subscribe({
-      next: () => {
+    this.clienteService.autenticar(identificador, password).subscribe({
+      next: (clienteAutenticado) => {
         this.errorMessage = '';
-        if (identificador.toLowerCase() === 'admin@elwey.com' || rol === 'ADMIN') {
+        const correoLimpio = (clienteAutenticado.correo || clienteAutenticado.email || '').toLowerCase();
+        if (correoLimpio === 'admin@elwey.com' || rol === 'ADMIN') {
+          this.clienteService.setClienteActual(clienteAutenticado, 'ADMIN');
           this.router.navigate(['/comidas/tabla']);
-        } else if (identificador.toLowerCase() === 'operador@elwey.com' || rol === 'OPERADOR') {
+        } else if (correoLimpio === 'operador@elwey.com' || rol === 'OPERADOR') {
+          this.clienteService.setClienteActual(clienteAutenticado, 'OPERADOR');
           this.router.navigate(['/admin/vertodo']);
         } else {
+          this.clienteService.setClienteActual(clienteAutenticado, 'CLIENTE');
           this.router.navigate(['/cliente/portal']);
         }
       },
