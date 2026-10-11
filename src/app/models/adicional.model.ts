@@ -7,5 +7,6 @@ export class Adicional {
     public precio: number,
     public activo: boolean = true,
     public categorias: Categoria[] = [],
+    public nombresCategorias?: string,
   ) {}
 }

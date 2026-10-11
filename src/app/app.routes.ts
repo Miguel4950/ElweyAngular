@@ -6,6 +6,9 @@ import { ComidaDetailComponent } from './pages/comida-detail/comida-detail.compo
 import { LoginComponent } from './pages/login/login.component';
 import { RegistroComponent } from './pages/registro/registro.component';
 import { MiPortalComponent } from './pages/mi-portal/mi-portal.component';
+import { PedidosPageComponent } from './pages/pedidos-page/pedidos-page.component';
+import { PedidoDetailComponent } from './pages/pedido-detail/pedido-detail.component';
+import { AdminClientesComponent } from './pages/admin-clientes/admin-clientes.component';
 
 export const routes: Routes = [
   {
@@ -18,6 +21,10 @@ export const routes: Routes = [
   },
   {
     path: 'comidas/tabla',
+    component: ComidaTablePageComponent,
+  },
+  {
+    path: 'admin/productos',
     component: ComidaTablePageComponent,
   },
   {
@@ -39,6 +46,22 @@ export const routes: Routes = [
   {
     path: 'comidas/:id',
     component: ComidaDetailComponent,
+  },
+  {
+    path: 'pedidos',
+    component: PedidosPageComponent,
+  },
+  {
+    path: 'pedidos/:id',
+    component: PedidoDetailComponent,
+  },
+  {
+    path: 'clientes',
+    component: AdminClientesComponent,
+  },
+  {
+    path: 'admin/vertodo',
+    component: AdminClientesComponent,
   },
   {
     path: 'login',

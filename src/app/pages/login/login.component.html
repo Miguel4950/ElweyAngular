@@ -7,7 +7,7 @@
       <span class="login-subtitle">Acceso al Sistema</span>
       <h1 class="login-title">Iniciar Sesión</h1>
       <p class="login-desc">
-        Ingresa tu correo y contraseña para acceder al sistema
+        Ingresa tu correo o usuario según tu rol para acceder al sistema
       </p>
     </div>
 
@@ -42,20 +42,30 @@
         </div>
       }
 
-      <!-- Campo 1: Correo Electrónico -->
+      <!-- Selector de Perfil / Entidad de Login -->
       <div class="form-grupo">
-        <label for="email" class="form-label">Correo Electrónico</label>
+        <label for="rol" class="form-label">Perfil de Acceso</label>
+        <select id="rol" formControlName="rol" class="form-input" style="cursor: pointer;">
+          <option value="CLIENTE">👤 Cliente</option>
+          <option value="OPERADOR">🍳 Operador de Cocina / Despachos</option>
+          <option value="ADMIN">⚙️ Administrador</option>
+        </select>
+      </div>
+
+      <!-- Campo 1: Correo Electrónico o Usuario -->
+      <div class="form-grupo">
+        <label for="email" class="form-label">Correo Electrónico o Usuario</label>
         <input
-          type="email"
+          type="text"
           id="email"
           formControlName="email"
           autocomplete="off"
-          placeholder="nombre@ejemplo.com"
+          placeholder="correo@ejemplo.com o usuario"
           class="form-input"
         />
         @if (loginForm.get('email')?.touched && loginForm.get('email')?.invalid) {
           <small class="error-texto" style="color: #f87171; font-size: 11px; margin-top: 4px;">
-            Ingresa un correo electrónico válido
+            Ingresa tu correo o nombre de usuario
           </small>
         }
       </div>
@@ -91,21 +101,29 @@
       </a>
     </div>
 
-    <!-- Credenciales de prueba oficiales -->
+    <!-- Credenciales de prueba oficiales (Clic para autocompletar) -->
     <div class="caja-credenciales">
-      <p class="titulo-credenciales">Credenciales de prueba:</p>
+      <p class="titulo-credenciales">Credenciales de prueba (clic para rellenar):</p>
       <div class="lista-credenciales">
-        <div (click)="cargarCredencial('lionel.messi@email.com', 'messi10')" style="cursor: pointer;" title="Clic para rellenar">
+        <div (click)="cargarCredencial('lionel.messi@email.com', 'messi10', 'CLIENTE')" style="cursor: pointer;" title="Clic para rellenar">
           <span style="color: #facc15; font-weight: 700;">👤 Cliente:</span>
           lionel.messi&#64;email.com / <span class="badge-clave">messi10</span>
         </div>
-        <div>
-          <span style="color: #38bdf8; font-weight: 700;">🍳 Operador:</span>
+        <div (click)="cargarCredencial('operador@elwey.com', 'operador123', 'OPERADOR')" style="cursor: pointer;" title="Clic para rellenar">
+          <span style="color: #38bdf8; font-weight: 700;">🍳 Operador (Correo):</span>
           operador&#64;elwey.com / <span class="badge-clave">operador123</span>
         </div>
-        <div>
-          <span style="color: #ef4444; font-weight: 700;">⚙️ Admin:</span>
+        <div (click)="cargarCredencial('chef_camilo', 'cocina123', 'OPERADOR')" style="cursor: pointer;" title="Clic para rellenar">
+          <span style="color: #38bdf8; font-weight: 700;">👨‍🍳 Operador (Usuario):</span>
+          chef_camilo / <span class="badge-clave">cocina123</span>
+        </div>
+        <div (click)="cargarCredencial('admin@elwey.com', 'admin123', 'ADMIN')" style="cursor: pointer;" title="Clic para rellenar">
+          <span style="color: #ef4444; font-weight: 700;">⚙️ Admin (Correo):</span>
           admin&#64;elwey.com / <span class="badge-clave">admin123</span>
+        </div>
+        <div (click)="cargarCredencial('admin_elwey', 'admin123', 'ADMIN')" style="cursor: pointer;" title="Clic para rellenar">
+          <span style="color: #ef4444; font-weight: 700;">🛡️ Admin (Usuario):</span>
+          admin_elwey / <span class="badge-clave">admin123</span>
         </div>
       </div>
     </div>

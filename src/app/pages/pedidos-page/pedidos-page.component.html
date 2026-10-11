@@ -1,0 +1,119 @@
+<app-navbar></app-navbar>
+
+<main class="main-pedidos">
+  <div class="contenedor-pedidos">
+    <!-- Encabezado -->
+    <div class="header-pedidos">
+      <div>
+        <span class="subtitulo-pedidos">DESPACHOS Y COCINA</span>
+        <h1 class="titulo-pedidos">Gestión de Pedidos ({{ pedidos.length }})</h1>
+        <p class="desc-pedidos">
+          Monitorea en tiempo real las órdenes activas, asigna estados de preparación y consulta el desglose de cada pedido.
+        </p>
+      </div>
+      <a [routerLink]="['/comidas/tarjetas']" class="btn-nuevo-pedido">
+        + ORDENAR PLATO DEL MENÚ
+      </a>
+    </div>
+
+    @if (mensajeExito) {
+      <div class="alerta-pedido-ok">
+        <span>✅ {{ mensajeExito }}</span>
+        <button type="button" (click)="mensajeExito = ''" class="btn-cerrar-alerta">✕</button>
+      </div>
+    }
+
+    <!-- Filtros por Estado -->
+    <div class="filtros-estado">
+      <button
+        type="button"
+        (click)="filtroEstado = ''"
+        class="pill-estado"
+        [class.pill-activa]="filtroEstado === ''"
+      >
+        Todos ({{ pedidos.length }})
+      </button>
+      @for (est of estadosDisponibles; track est) {
+        <button
+          type="button"
+          (click)="filtroEstado = est"
+          class="pill-estado"
+          [class.pill-activa]="filtroEstado === est"
+        >
+          {{ est }}
+        </button>
+      }
+    </div>
+
+    <!-- Tabla de Pedidos -->
+    <div class="tabla-pedidos-card">
+      <table class="tabla-pedidos">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Domiciliario</th>
+            <th>Platos</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of pedidosFiltrados; track p.id) {
+            <tr>
+              <td class="col-id">#{{ p.id }}</td>
+              <td>
+                <div class="nombre-principal">{{ p.cliente ? (p.cliente.nombreCompleto || p.cliente.nombre) : 'Cliente General' }}</div>
+                <div class="sub-info">{{ p.cliente ? p.cliente.direccion : '' }}</div>
+              </td>
+              <td>
+                @if (p.domiciliario) {
+                  <span class="badge-domiciliario">🛵 {{ p.domiciliario.nombre }}</span>
+                } @else {
+                  <span class="sub-info">Sin asignar</span>
+                }
+              </td>
+              <td>
+                <span class="badge-items">{{ p.items ? p.items.length : 0 }} ítem(s)</span>
+              </td>
+              <td class="sub-info">
+                {{ (p.fechaCreacion || p.fecha_creacion) | date:'short' }}
+              </td>
+              <td>
+                <select
+                  [value]="p.estado"
+                  (change)="cambiarEstado(p, $event)"
+                  class="select-estado"
+                >
+                  @for (est of estadosDisponibles; track est) {
+                    <option [value]="est" [selected]="p.estado === est">{{ est }}</option>
+                  }
+                </select>
+              </td>
+              <td class="col-total">${{ (p.total ?? 0) | number:'1.0-0' }}</td>
+              <td class="col-acciones">
+                <a [routerLink]="['/pedidos', p.id]" class="btn-ver-detalle">
+                  Ver Detalle
+                </a>
+                <button type="button" (click)="eliminarPedido(p.id)" class="btn-eliminar-pedido">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="8" class="fila-vacia">
+                No se encontraron pedidos para el estado seleccionado.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

@@ -1,0 +1,124 @@
+<app-navbar></app-navbar>
+
+<main class="main-admin-clientes">
+  <div class="contenedor-admin-clientes">
+    <!-- Encabezado -->
+    <div class="header-admin-clientes">
+      <div>
+        <span class="subtitulo-admin">DIRECTORIO ADMINISTRATIVO</span>
+        <h1 class="titulo-admin">Clientes Registrados ({{ clientes.length }})</h1>
+        <p class="desc-admin">
+          Visualiza, registra, edita o elimina cuentas de clientes conectadas al backend REST de Spring Boot.
+        </p>
+      </div>
+      <div class="acciones-top-clientes">
+        <input
+          type="text"
+          [value]="busqueda"
+          (input)="onBuscar($event)"
+          placeholder="Buscar por nombre, correo o teléfono..."
+          class="input-buscar-cliente"
+        />
+        <button type="button" (click)="abrirNuevoCliente()" class="btn-nuevo-cliente">
+          + NUEVO CLIENTE
+        </button>
+      </div>
+    </div>
+
+    @if (mensajeFeedback) {
+      <div class="alerta-ok">
+        <span>✅ {{ mensajeFeedback }}</span>
+        <button type="button" (click)="mensajeFeedback = ''" class="btn-cerrar">✕</button>
+      </div>
+    }
+
+    <!-- Formulario Reactivo Desplegable para Crear / Editar Cliente -->
+    @if (mostrarFormulario) {
+      <div class="card-form-cliente">
+        <h2 class="titulo-form-cliente">
+          {{ editClienteId ? 'Editar Cliente #' + editClienteId : 'Registrar Nuevo Cliente' }}
+        </h2>
+        @if (errorMessage) {
+          <p style="color: #f87171; font-size: 13px; margin-bottom: 12px;">⚠️ {{ errorMessage }}</p>
+        }
+        <form [formGroup]="clienteForm" (ngSubmit)="guardarCliente()" class="grid-form-cliente">
+          <div>
+            <label class="label-campo">NOMBRE</label>
+            <input type="text" formControlName="nombre" placeholder="Ej. Lionel" class="input-campo" />
+          </div>
+          <div>
+            <label class="label-campo">APELLIDO</label>
+            <input type="text" formControlName="apellido" placeholder="Ej. Messi" class="input-campo" />
+          </div>
+          <div>
+            <label class="label-campo">CORREO ELECTRÓNICO</label>
+            <input type="email" formControlName="correo" placeholder="cliente@email.com" class="input-campo" />
+          </div>
+          <div>
+            <label class="label-campo">CONTRASEÑA {{ editClienteId ? '(Opcional)' : '' }}</label>
+            <input type="password" formControlName="contrasena" placeholder="••••••" class="input-campo" />
+          </div>
+          <div>
+            <label class="label-campo">TELÉFONO</label>
+            <input type="text" formControlName="telefono" placeholder="310 000 0000" class="input-campo" />
+          </div>
+          <div>
+            <label class="label-campo">DIRECCIÓN EN BOGOTÁ</label>
+            <input type="text" formControlName="direccion" placeholder="Cra 7 # 45-23, Bogotá" class="input-campo" />
+          </div>
+          <div class="botones-form-cliente">
+            <button type="submit" class="btn-nuevo-cliente">
+              {{ editClienteId ? 'GUARDAR CAMBIOS' : 'REGISTRAR CLIENTE' }}
+            </button>
+            <button type="button" (click)="cancelarFormulario()" class="btn-cancelar-cliente">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+
+    <!-- Cuadrícula de Tarjetas de Clientes (idéntica a admin-clientes.html de Spring Boot) -->
+    <div class="grid-clientes">
+      @for (cli of clientesFiltrados; track cli.id) {
+        <article class="tarjeta-cliente">
+          <div class="cabecera-tarjeta">
+            <div class="avatar-cliente">
+              {{ (cli.nombre || 'C').charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <span class="id-badge">ID #{{ cli.id }}</span>
+              <h3 class="nombre-cliente">{{ cli.nombreCompleto || cli.nombre }}</h3>
+            </div>
+          </div>
+
+          <div class="cuerpo-tarjeta">
+            <p><strong>✉️ Correo:</strong> {{ cli.correo || cli.email }}</p>
+            <p><strong>📞 Teléfono:</strong> {{ cli.telefono }}</p>
+            <p><strong>📍 Dirección:</strong> {{ cli.direccion || 'Por definir' }}</p>
+            <p><strong>📅 Registro:</strong> {{ cli.fechaRegistro || '2026' }}</p>
+          </div>
+
+          <div class="pie-tarjeta">
+            <a [routerLink]="['/cliente/portal', cli.id]" class="btn-portal-cliente">
+              Ver Portal
+            </a>
+            <button type="button" (click)="editarCliente(cli)" class="btn-editar-cliente">
+              Editar
+            </button>
+            <button type="button" (click)="eliminarCliente(cli)" class="btn-borrar-cliente">
+              Eliminar
+            </button>
+          </div>
+        </article>
+      } @empty {
+        <div class="vacio-clientes">
+          No se encontraron clientes con ese criterio de búsqueda.
+        </div>
+      }
+    </div>
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>

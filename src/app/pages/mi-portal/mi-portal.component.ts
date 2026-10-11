@@ -1,17 +1,23 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
+import { mergeMap, of } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
 import { ClienteService } from '../../service/cliente.service';
+import { PedidoService } from '../../service/pedido.service';
 import { Cliente } from '../../models/cliente.model';
+import { Pedido } from '../../models/pedido.model';
 
 @Component({
   selector: 'app-mi-portal',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    RouterLink,
+    DecimalPipe,
     NavbarComponent,
     FooterComponent,
     CalaverasComponent,
@@ -21,10 +27,12 @@ import { Cliente } from '../../models/cliente.model';
 })
 export class MiPortalComponent implements OnInit {
   private clienteService = inject(ClienteService);
+  private pedidoService = inject(PedidoService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   cliente: Cliente | null = null;
+  pedidosCliente: Pedido[] = [];
   mensajeActualizado: boolean = false;
   mensajeBienvenido: boolean = false;
   errorMessage: string = '';
@@ -48,40 +56,42 @@ export class MiPortalComponent implements OnInit {
       }
     });
 
+    // 1. Determinar el ID del cliente por ruta o sesión activa, o cargar el cliente 1 por defecto
     const idParam = this.route.snapshot.paramMap.get('id');
-    if (idParam) {
-      const clienteEncontrado = this.clienteService.getClienteById(Number(idParam));
-      if (clienteEncontrado) {
-        this.cliente = clienteEncontrado;
-      }
-    }
+    const sesionActual = this.clienteService.getClienteActual();
+    const targetId = idParam ? Number(idParam) : sesionActual?.id ?? 1;
 
-    if (!this.cliente) {
-      this.cliente = this.clienteService.getClienteActual();
-    }
-
-    // Si aún no hay sesión activa, cargamos el primer cliente de prueba para evaluación inmediata
-    if (!this.cliente) {
-      const lista = this.clienteService.getClientes();
-      if (lista.length > 0) {
-        this.cliente = lista[0];
-        this.clienteService.setClienteActual(this.cliente);
-      }
-    }
-
-    if (this.cliente) {
-      this.cargarFormulario(this.cliente);
-    }
+    // 2. Consultar datos del cliente y encadenar con mergeMap la consulta de sus pedidos
+    this.clienteService
+      .findById(targetId)
+      .pipe(
+        mergeMap((cli) => {
+          this.cliente = cli;
+          if (!sesionActual) {
+            this.clienteService.setClienteActual(cli);
+          }
+          this.cargarFormulario(cli);
+          return cli && cli.id ? this.pedidoService.findByCliente(cli.id) : of([]);
+        }),
+      )
+      .subscribe({
+        next: (pedidos) => {
+          this.pedidosCliente = pedidos;
+        },
+        error: () => {
+          this.errorMessage = 'No se pudo cargar la información del cliente desde el servidor.';
+        },
+      });
   }
 
   cargarFormulario(cliente: Cliente): void {
     this.portalForm.patchValue({
       id: cliente.id,
-      nombre: cliente.nombre,
-      correo: cliente.correo,
+      nombre: cliente.nombreCompleto || cliente.nombre,
+      correo: cliente.correo || cliente.email || '',
       telefono: cliente.telefono,
       direccion: cliente.direccion,
-      fechaRegistro: '15 de Enero, 2026',
+      fechaRegistro: cliente.fechaRegistro || '15 de Enero, 2026',
     });
   }
 
@@ -96,24 +106,38 @@ export class MiPortalComponent implements OnInit {
       return;
     }
 
-    const { nombre, correo, telefono, direccion } = this.portalForm.value;
+    const { nombre, correo, telefono, direccion, fechaRegistro } = this.portalForm.value;
+    const correoLimpio = correo!.trim();
 
     const clienteActualizado = new Cliente(
       this.cliente.id,
       nombre!.trim(),
-      correo!.trim(),
-      this.cliente.contrasena,
+      correoLimpio,
+      this.cliente.contrasena || this.cliente.password || '',
       telefono!.trim(),
       direccion!.trim(),
-      this.cliente.activo,
-      this.cliente.pedidos
+      this.cliente.activo ?? true,
+      [],
+      '',
+      correoLimpio,
+      this.cliente.contrasena || this.cliente.password || '',
+      fechaRegistro || this.cliente.fechaRegistro,
     );
 
-    this.clienteService.updateCliente(this.cliente.id, clienteActualizado);
-    this.cliente = clienteActualizado;
-    this.mensajeActualizado = true;
-    this.mensajeBienvenido = false;
-    this.errorMessage = '';
+    // 1. Enviar actualización por PUT /clientes/update
+    this.clienteService.updateCliente(this.cliente.id, clienteActualizado).subscribe({
+      next: (res) => {
+        this.cliente = res;
+        this.cargarFormulario(res);
+        this.mensajeActualizado = true;
+        this.mensajeBienvenido = false;
+        this.errorMessage = '';
+      },
+      error: (err) => {
+        this.errorMessage =
+          err?.error?.mensaje || 'No fue posible actualizar los datos del cliente.';
+      },
+    });
   }
 
   onRestablecer(): void {
@@ -130,13 +154,14 @@ export class MiPortalComponent implements OnInit {
     }
 
     const confirmado = confirm(
-      '¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.'
+      '¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.',
     );
 
     if (confirmado) {
       const idAEliminar = this.cliente.id;
-      this.clienteService.eliminarCliente(idAEliminar);
-      this.router.navigate(['/']);
+      this.clienteService.deleteById(idAEliminar).subscribe(() => {
+        this.router.navigate(['/']);
+      });
     }
   }
 }

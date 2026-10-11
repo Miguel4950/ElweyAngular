@@ -26,7 +26,7 @@ import { ComidaService } from '../../service/comida.service';
   styleUrl: './comida-form.component.css',
 })
 export class ComidaFormComponent implements OnInit {
-  // Inyección de dependencias funcional idéntica al código del profesor
+  // 1. Inyección de dependencias funcional
   private comidaService = inject(ComidaService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -43,7 +43,7 @@ export class ComidaFormComponent implements OnInit {
     precio: new FormControl('', [
       Validators.required,
       Validators.min(0),
-      Validators.pattern(/^[0-9]+$/),
+      Validators.pattern(/^[0-9]+(\.[0-9]+)?$/),
     ]),
     descripcion: new FormControl('', [
       Validators.required,
@@ -65,28 +65,33 @@ export class ComidaFormComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.categorias = this.comidaService.getCategorias();
-    this.comidaId = Number(this.activatedRoute.snapshot.params['id']);
+    // 1. Cargar listado de categorías desde el backend REST
+    this.comidaService.getCategorias().subscribe((cats) => {
+      this.categorias = cats;
+    });
 
+    // 2. Verificar si existe parámetro id en la ruta para activar modo edición
+    this.comidaId = Number(this.activatedRoute.snapshot.params['id']);
     if (this.comidaId) {
       this.isEdit = true;
-      const comida = this.comidaService.getComidaById(this.comidaId);
-
-      if (comida) {
-        this.comidaForm.patchValue({
-          nombre: comida.nombre,
-          precio: comida.precio.toString(),
-          descripcion: comida.descripcion,
-          categoriaId: comida.categoria ? comida.categoria.id.toString() : '1',
-          etiqueta: comida.etiqueta,
-          imagen_url: comida.imagen_url,
-          activo: comida.activo,
-        });
-      }
+      this.comidaService.findById(this.comidaId).subscribe((comida) => {
+        if (comida) {
+          this.comidaForm.patchValue({
+            nombre: comida.nombre,
+            precio: comida.precio.toString(),
+            descripcion: comida.descripcion,
+            categoriaId: comida.categoria ? comida.categoria.id.toString() : '1',
+            etiqueta: comida.etiqueta,
+            imagen_url: comida.imagen_url || comida.imagenUrl || '',
+            activo: comida.activo ?? true,
+          });
+        }
+      });
     }
   }
 
   handleSubmit(): void {
+    // 1. Validar formulario antes de enviar petición HTTP
     if (!this.comidaForm.valid) {
       this.comidaForm.markAllAsTouched();
       return;
@@ -95,28 +100,35 @@ export class ComidaFormComponent implements OnInit {
     const val = this.comidaForm.value;
     const cat =
       this.categorias.find((c) => c.id === Number(val.categoriaId)) ||
-      this.categorias[0];
+      this.categorias[0] ||
+      new Categoria(Number(val.categoriaId) || 1, 'Tacos');
+
+    const imgUrl =
+      val.imagen_url && val.imagen_url.trim() !== ''
+        ? val.imagen_url.trim()
+        : '/images/comidas/tacos-al-pastor.jpg';
 
     const plato: Comida = {
-      id: 0,
-      nombre: val.nombre ?? 'Plato Desconocido',
+      id: this.comidaId ?? 0,
+      nombre: val.nombre ?? 'Plato Nuevo',
       precio: Number(val.precio),
       descripcion: val.descripcion ?? '',
-      imagen_url:
-        val.imagen_url && val.imagen_url.trim() !== ''
-          ? val.imagen_url
-          : 'https://images.unsplash.com/photo-1648437595587-e6a8b0cdf1f9?w=600&h=400&fit=crop',
+      imagen_url: imgUrl,
+      imagenUrl: imgUrl,
       etiqueta: val.etiqueta ?? 'Estrella',
       activo: val.activo ?? true,
       categoria: cat,
     };
 
+    // 2. Enviar POST o PUT al backend y redirigir al inventario cuando responda el servidor
     if (this.isEdit && this.comidaId) {
-      this.comidaService.updateComida(this.comidaId, plato);
+      this.comidaService.updateComida(this.comidaId, plato).subscribe(() => {
+        this.router.navigate(['/comidas/tabla']);
+      });
     } else {
-      this.comidaService.addComida(plato);
+      this.comidaService.addComida(plato).subscribe(() => {
+        this.router.navigate(['/comidas/tabla']);
+      });
     }
-
-    this.router.navigate(['/comidas']);
   }
 }

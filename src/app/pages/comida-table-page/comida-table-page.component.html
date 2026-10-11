@@ -10,13 +10,21 @@
           🎴 Menú en Tarjetas
         </a>
         <a [routerLink]="['/comidas/tabla']" [class.modo-activo]="!esVistaTarjetas" class="btn-modo-vista">
-          📋 Inventario en Tabla
+          📋 Panel CRUD Administrativo
         </a>
       </div>
       <a [routerLink]="['/']" class="notice-sesion-btn">
         &larr; Volver al Inicio
       </a>
     </div>
+
+    <!-- Alerta de conflicto o aviso -->
+    @if (mensajeAlerta) {
+      <div style="margin-bottom: 18px; padding: 14px 18px; border-radius: 10px; background: rgba(239, 68, 68, 0.14); border: 1px solid #ef4444; color: #fca5a5; display: flex; justify-content: space-between; align-items: center;">
+        <span>⚠️ {{ mensajeAlerta }}</span>
+        <button type="button" (click)="mensajeAlerta = ''" style="background: transparent; border: none; color: #fca5a5; font-weight: 800; cursor: pointer;">✕</button>
+      </div>
+    }
 
     <!-- =========================================================================
          MODO 1: VISTA DE TARJETAS (Carta y Especialidades idéntico a Spring Boot)
@@ -43,21 +51,11 @@
           <button type="button" (click)="seleccionarCategoria('')" class="pill-btn" [class.pill-activa]="filtroCategoria === ''">
             Todos ({{ comidaArray.length }})
           </button>
-          <button type="button" (click)="seleccionarCategoria('Tacos')" class="pill-btn" [class.pill-activa]="filtroCategoria === 'Tacos'">
-            Tacos
-          </button>
-          <button type="button" (click)="seleccionarCategoria('Quesadillas')" class="pill-btn" [class.pill-activa]="filtroCategoria === 'Quesadillas'">
-            Quesadillas
-          </button>
-          <button type="button" (click)="seleccionarCategoria('Entradas')" class="pill-btn" [class.pill-activa]="filtroCategoria === 'Entradas'">
-            Entradas
-          </button>
-          <button type="button" (click)="seleccionarCategoria('Especialidades')" class="pill-btn" [class.pill-activa]="filtroCategoria === 'Especialidades'">
-            Especialidades
-          </button>
-          <button type="button" (click)="seleccionarCategoria('Burritos')" class="pill-btn" [class.pill-activa]="filtroCategoria === 'Burritos'">
-            Burritos
-          </button>
+          @for (cat of categorias; track cat.id) {
+            <button type="button" (click)="seleccionarCategoria(cat.nombre)" class="pill-btn" [class.pill-activa]="filtroCategoria === cat.nombre">
+              {{ cat.nombre }}
+            </button>
+          }
         </div>
 
         <div class="caja-buscador">
@@ -76,7 +74,7 @@
         @for (item of comidasFiltradas; track item.id) {
           <article class="tarjeta-plato">
             <div class="caja-foto-plato">
-              <img [src]="item.imagen_url" [alt]="item.nombre" class="img-plato" />
+              <img [src]="item.imagen_url || item.imagenUrl" [alt]="item.nombre" class="img-plato" />
               <span
                 class="badge-etiqueta-flotante"
                 [class.etiqueta-verde]="item.etiqueta === 'Vegano' || item.etiqueta === 'Favorito' || item.etiqueta === 'Top Ventas' || item.etiqueta === 'Clásico'"
@@ -105,22 +103,372 @@
     }
 
     <!-- =========================================================================
-         MODO 2: VISTA DE TABLA (Inventario Gastronómico idéntico a Spring Boot)
+         MODO 2: PANEL DE GESTIÓN Y CRUD DE ENTIDADES (REST Spring Boot)
          ========================================================================= -->
     @else {
-      <div class="barra-superior-gestion">
-        <app-page-title></app-page-title>
-        <div class="contenedor-btn-crear">
-          <a [routerLink]="['/comidas/new']" class="btn-crear-comida">
-            + CREAR COMIDA
-          </a>
-        </div>
+      <!-- Pestañas para alternar entre los CRUDs del restaurante -->
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 24px; padding-bottom: 14px; border-bottom: 1px solid #27272a;">
+        <button
+          type="button"
+          (click)="cambiarTab('COMIDAS')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'COMIDAS'"
+        >
+          🍽️ Comidas ({{ comidaArray.length }})
+        </button>
+        <button
+          type="button"
+          (click)="cambiarTab('ADICIONALES')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'ADICIONALES'"
+        >
+          🧀 Adicionales ({{ adicionales.length }})
+        </button>
+        <button
+          type="button"
+          (click)="cambiarTab('CATEGORIAS')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'CATEGORIAS'"
+        >
+          🏷️ Categorías ({{ categorias.length }})
+        </button>
+        <button
+          type="button"
+          (click)="cambiarTab('DOMICILIARIOS')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'DOMICILIARIOS'"
+        >
+          🛵 Domiciliarios ({{ domiciliarios.length }})
+        </button>
+        <button
+          type="button"
+          (click)="cambiarTab('OPERADORES')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'OPERADORES'"
+        >
+          👨‍🍳 Operadores ({{ operadores.length }})
+        </button>
+        <button
+          type="button"
+          (click)="cambiarTab('ADMINISTRADORES')"
+          class="pill-btn"
+          [class.pill-activa]="tabActiva === 'ADMINISTRADORES'"
+        >
+          🛡️ Administradores ({{ administradores.length }})
+        </button>
       </div>
 
-      <app-comida-table
-        [comidaArray]="comidaArray"
-        (comidaDeleted)="eliminarComida($event)"
-      ></app-comida-table>
+      <!-- TAB 1: CRUD DE COMIDAS -->
+      @if (tabActiva === 'COMIDAS') {
+        <div class="barra-superior-gestion">
+          <app-page-title></app-page-title>
+          <div class="contenedor-btn-crear">
+            <a [routerLink]="['/comidas/new']" class="btn-crear-comida">
+              + CREAR COMIDA
+            </a>
+          </div>
+        </div>
+
+        <app-comida-table
+          [comidaArray]="comidaArray"
+          (comidaDeleted)="eliminarComida($event)"
+        ></app-comida-table>
+      }
+
+      <!-- TAB 2: CRUD DE ADICIONALES -->
+      @if (tabActiva === 'ADICIONALES') {
+        <div style="background: #141417; border: 1px solid #27272a; border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+          <h2 style="margin: 0 0 16px; color: #facc15; font-size: 20px;">
+            {{ editAdicionalId ? 'Editar Adicional #' + editAdicionalId : 'Crear Nuevo Adicional' }}
+          </h2>
+          <form [formGroup]="adicionalForm" (ngSubmit)="guardarAdicional()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end;">
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">NOMBRE DEL ADICIONAL</label>
+              <input type="text" formControlName="nombre" placeholder="Ej. Queso Oaxaca Extra" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">PRECIO ($)</label>
+              <input type="number" formControlName="precio" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">CATEGORÍA ASOCIADA</label>
+              <select formControlName="categoriaId" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;">
+                @for (c of categorias; track c.id) {
+                  <option [value]="c.id">{{ c.nombre }}</option>
+                }
+              </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="submit" class="btn-crear-comida" style="border: none; cursor: pointer;">
+                {{ editAdicionalId ? 'ACTUALIZAR' : '+ GUARDAR' }}
+              </button>
+              @if (editAdicionalId) {
+                <button type="button" (click)="cancelarEdicionAdicional()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #52525b; background: transparent; color: #e4e4e7; cursor: pointer;">
+                  Cancelar
+                </button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <div style="overflow-x: auto; background: #141417; border: 1px solid #27272a; border-radius: 14px;">
+          <table style="width: 100%; border-collapse: collapse; color: #e4e4e7; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #27272a; color: #facc15; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 14px 16px;">ID</th>
+                <th style="padding: 14px 16px;">Nombre</th>
+                <th style="padding: 14px 16px;">Precio</th>
+                <th style="padding: 14px 16px;">Categorías</th>
+                <th style="padding: 14px 16px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (ad of adicionales; track ad.id) {
+                <tr style="border-bottom: 1px solid #1f1f23;">
+                  <td style="padding: 12px 16px; font-weight: 700;">#{{ ad.id }}</td>
+                  <td style="padding: 12px 16px; font-weight: 600;">{{ ad.nombre }}</td>
+                  <td style="padding: 12px 16px; color: #4ade80; font-weight: 700;">+${{ ad.precio | number:'1.0-0' }}</td>
+                  <td style="padding: 12px 16px; color: #a1a1aa; font-size: 13px;">{{ ad.nombresCategorias || 'General' }}</td>
+                  <td style="padding: 12px 16px; display: flex; gap: 8px;">
+                    <button type="button" (click)="editarAdicional(ad)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #facc15; background: transparent; color: #facc15; font-size: 12px; font-weight: 700; cursor: pointer;">Editar</button>
+                    <button type="button" (click)="eliminarAdicional(ad.id)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ef4444; background: transparent; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">Eliminar</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- TAB 3: CRUD DE CATEGORÍAS -->
+      @if (tabActiva === 'CATEGORIAS') {
+        <div style="background: #141417; border: 1px solid #27272a; border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+          <h2 style="margin: 0 0 16px; color: #facc15; font-size: 20px;">
+            {{ editCategoriaId ? 'Editar Categoría #' + editCategoriaId : 'Crear Nueva Categoría' }}
+          </h2>
+          <form [formGroup]="categoriaForm" (ngSubmit)="guardarCategoria()" style="display: flex; flex-wrap: wrap; gap: 14px; align-items: end;">
+            <div style="flex: 1; min-width: 240px;">
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">NOMBRE DE LA CATEGORÍA</label>
+              <input type="text" formControlName="nombre" placeholder="Ej. Postres Mexicanos" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <button type="submit" class="btn-crear-comida" style="border: none; cursor: pointer;">
+              {{ editCategoriaId ? 'ACTUALIZAR CATEGORÍA' : '+ CREAR CATEGORÍA' }}
+            </button>
+            @if (editCategoriaId) {
+              <button type="button" (click)="editCategoriaId = null; categoriaForm.reset()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #52525b; background: transparent; color: #e4e4e7; cursor: pointer;">
+                Cancelar
+              </button>
+            }
+          </form>
+        </div>
+
+        <div style="overflow-x: auto; background: #141417; border: 1px solid #27272a; border-radius: 14px;">
+          <table style="width: 100%; border-collapse: collapse; color: #e4e4e7; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #27272a; color: #facc15; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 14px 16px;">ID</th>
+                <th style="padding: 14px 16px;">Nombre de Categoría</th>
+                <th style="padding: 14px 16px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (cat of categorias; track cat.id) {
+                <tr style="border-bottom: 1px solid #1f1f23;">
+                  <td style="padding: 12px 16px; font-weight: 700;">#{{ cat.id }}</td>
+                  <td style="padding: 12px 16px; font-weight: 600;">{{ cat.nombre }}</td>
+                  <td style="padding: 12px 16px; display: flex; gap: 8px;">
+                    <button type="button" (click)="editarCategoria(cat)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #facc15; background: transparent; color: #facc15; font-size: 12px; font-weight: 700; cursor: pointer;">Editar</button>
+                    <button type="button" (click)="eliminarCategoria(cat.id)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ef4444; background: transparent; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">Eliminar</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- TAB 4: CRUD DE DOMICILIARIOS -->
+      @if (tabActiva === 'DOMICILIARIOS') {
+        <div style="background: #141417; border: 1px solid #27272a; border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+          <h2 style="margin: 0 0 16px; color: #facc15; font-size: 20px;">
+            {{ editDomiciliarioId ? 'Editar Domiciliario #' + editDomiciliarioId : 'Registrar Nuevo Domiciliario' }}
+          </h2>
+          <form [formGroup]="domiciliarioForm" (ngSubmit)="guardarDomiciliario()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; align-items: end;">
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">CÉDULA</label>
+              <input type="text" formControlName="cedula" placeholder="1020304050" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">NOMBRE COMPLETO</label>
+              <input type="text" formControlName="nombre" placeholder="Nombre del repartidor" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">CELULAR</label>
+              <input type="text" formControlName="celular" placeholder="300 000 0000" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; padding-bottom: 10px;">
+              <input type="checkbox" id="dispDom" formControlName="disponible" />
+              <label for="dispDom" style="font-size: 13px; color: #e4e4e7; cursor: pointer;">Disponible</label>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="submit" class="btn-crear-comida" style="border: none; cursor: pointer;">
+                {{ editDomiciliarioId ? 'ACTUALIZAR' : '+ REGISTRAR' }}
+              </button>
+              @if (editDomiciliarioId) {
+                <button type="button" (click)="cancelarEdicionDomiciliario()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #52525b; background: transparent; color: #e4e4e7; cursor: pointer;">
+                  Cancelar
+                </button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <div style="overflow-x: auto; background: #141417; border: 1px solid #27272a; border-radius: 14px;">
+          <table style="width: 100%; border-collapse: collapse; color: #e4e4e7; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #27272a; color: #facc15; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 14px 16px;">ID</th>
+                <th style="padding: 14px 16px;">Cédula</th>
+                <th style="padding: 14px 16px;">Nombre</th>
+                <th style="padding: 14px 16px;">Celular</th>
+                <th style="padding: 14px 16px;">Estado</th>
+                <th style="padding: 14px 16px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (dom of domiciliarios; track dom.id) {
+                <tr style="border-bottom: 1px solid #1f1f23;">
+                  <td style="padding: 12px 16px; font-weight: 700;">#{{ dom.id }}</td>
+                  <td style="padding: 12px 16px;">{{ dom.cedula }}</td>
+                  <td style="padding: 12px 16px; font-weight: 600;">{{ dom.nombre }}</td>
+                  <td style="padding: 12px 16px;">{{ dom.celular }}</td>
+                  <td style="padding: 12px 16px;">
+                    <span [style.color]="dom.disponible ? '#4ade80' : '#f87171'" style="font-weight: 700; font-size: 12px;">
+                      {{ dom.disponible ? '● DISPONIBLE' : '○ OCUPADO' }}
+                    </span>
+                  </td>
+                  <td style="padding: 12px 16px; display: flex; gap: 8px;">
+                    <button type="button" (click)="editarDomiciliario(dom)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #facc15; background: transparent; color: #facc15; font-size: 12px; font-weight: 700; cursor: pointer;">Editar</button>
+                    <button type="button" (click)="eliminarDomiciliario(dom.id)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ef4444; background: transparent; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">Eliminar</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- TAB 5: CRUD DE OPERADORES -->
+      @if (tabActiva === 'OPERADORES') {
+        <div style="background: #141417; border: 1px solid #27272a; border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+          <h2 style="margin: 0 0 16px; color: #facc15; font-size: 20px;">
+            {{ editOperadorId ? 'Editar Operador #' + editOperadorId : 'Registrar Nuevo Operador' }}
+          </h2>
+          <form [formGroup]="operadorForm" (ngSubmit)="guardarOperador()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end;">
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">NOMBRE</label>
+              <input type="text" formControlName="nombre" placeholder="Chef Camilo" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">USUARIO</label>
+              <input type="text" formControlName="usuario" placeholder="chef_camilo" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">CONTRASEÑA</label>
+              <input type="password" formControlName="contrasena" placeholder="••••••" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="submit" class="btn-crear-comida" style="border: none; cursor: pointer;">
+                {{ editOperadorId ? 'ACTUALIZAR' : '+ REGISTRAR' }}
+              </button>
+              @if (editOperadorId) {
+                <button type="button" (click)="cancelarEdicionOperador()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #52525b; background: transparent; color: #e4e4e7; cursor: pointer;">
+                  Cancelar
+                </button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <div style="overflow-x: auto; background: #141417; border: 1px solid #27272a; border-radius: 14px;">
+          <table style="width: 100%; border-collapse: collapse; color: #e4e4e7; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #27272a; color: #facc15; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 14px 16px;">ID</th>
+                <th style="padding: 14px 16px;">Nombre</th>
+                <th style="padding: 14px 16px;">Usuario</th>
+                <th style="padding: 14px 16px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (op of operadores; track op.id) {
+                <tr style="border-bottom: 1px solid #1f1f23;">
+                  <td style="padding: 12px 16px; font-weight: 700;">#{{ op.id }}</td>
+                  <td style="padding: 12px 16px; font-weight: 600;">{{ op.nombre }}</td>
+                  <td style="padding: 12px 16px; color: #38bdf8;">{{ op.usuario }}</td>
+                  <td style="padding: 12px 16px; display: flex; gap: 8px;">
+                    <button type="button" (click)="editarOperador(op)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #facc15; background: transparent; color: #facc15; font-size: 12px; font-weight: 700; cursor: pointer;">Editar</button>
+                    <button type="button" (click)="eliminarOperador(op.id)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ef4444; background: transparent; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">Eliminar</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- TAB 6: CRUD DE ADMINISTRADORES -->
+      @if (tabActiva === 'ADMINISTRADORES') {
+        <div style="background: #141417; border: 1px solid #27272a; border-radius: 14px; padding: 24px; margin-bottom: 24px;">
+          <h2 style="margin: 0 0 16px; color: #facc15; font-size: 20px;">
+            {{ editAdminId ? 'Editar Administrador #' + editAdminId : 'Registrar Nuevo Administrador' }}
+          </h2>
+          <form [formGroup]="adminForm" (ngSubmit)="guardarAdministrador()" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; align-items: end;">
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">USUARIO ADMINISTRADOR</label>
+              <input type="text" formControlName="usuario" placeholder="admin_elwey" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div>
+              <label style="display: block; font-size: 11px; color: #a1a1aa; margin-bottom: 6px; font-weight: 700;">CONTRASEÑA</label>
+              <input type="password" formControlName="contrasena" placeholder="••••••" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #3f3f46; background: #18181b; color: #fff;" />
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <button type="submit" class="btn-crear-comida" style="border: none; cursor: pointer;">
+                {{ editAdminId ? 'ACTUALIZAR' : '+ REGISTRAR' }}
+              </button>
+              @if (editAdminId) {
+                <button type="button" (click)="cancelarEdicionAdmin()" style="padding: 10px 14px; border-radius: 8px; border: 1px solid #52525b; background: transparent; color: #e4e4e7; cursor: pointer;">
+                  Cancelar
+                </button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <div style="overflow-x: auto; background: #141417; border: 1px solid #27272a; border-radius: 14px;">
+          <table style="width: 100%; border-collapse: collapse; color: #e4e4e7; text-align: left;">
+            <thead>
+              <tr style="border-bottom: 1px solid #27272a; color: #facc15; font-size: 12px; text-transform: uppercase;">
+                <th style="padding: 14px 16px;">ID</th>
+                <th style="padding: 14px 16px;">Usuario</th>
+                <th style="padding: 14px 16px;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (adm of administradores; track adm.id) {
+                <tr style="border-bottom: 1px solid #1f1f23;">
+                  <td style="padding: 12px 16px; font-weight: 700;">#{{ adm.id }}</td>
+                  <td style="padding: 12px 16px; font-weight: 600; color: #ef4444;">{{ adm.usuario }}</td>
+                  <td style="padding: 12px 16px; display: flex; gap: 8px;">
+                    <button type="button" (click)="editarAdministrador(adm)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #facc15; background: transparent; color: #facc15; font-size: 12px; font-weight: 700; cursor: pointer;">Editar</button>
+                    <button type="button" (click)="eliminarAdministrador(adm.id)" style="padding: 6px 12px; border-radius: 6px; border: 1px solid #ef4444; background: transparent; color: #ef4444; font-size: 12px; font-weight: 700; cursor: pointer;">Eliminar</button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
     }
 
   </div>

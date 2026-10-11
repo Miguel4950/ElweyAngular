@@ -10,5 +10,10 @@ export class Cliente {
     public direccion: string,
     public activo: boolean = true,
     public pedidos: Pedido[] = [],
+    public apellido?: string,
+    public email?: string,
+    public password?: string,
+    public fechaRegistro?: string,
+    public nombreCompleto?: string,
   ) {}
 }

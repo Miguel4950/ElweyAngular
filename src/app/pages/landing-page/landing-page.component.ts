@@ -33,6 +33,9 @@ export class LandingPageComponent implements OnInit {
   comidaArray: Comida[] = [];
 
   ngOnInit(): void {
-    this.comidaArray = this.comidaService.getComidas().slice(0, 4);
+    // 1. Consumir las comidas desde el API REST y mostrar los 4 platos destacados
+    this.comidaService.findAll().subscribe((comidas) => {
+      this.comidaArray = comidas.slice(0, 4);
+    });
   }
 }

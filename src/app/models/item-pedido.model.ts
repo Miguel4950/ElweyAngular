@@ -6,8 +6,9 @@ export class ItemPedido {
   constructor(
     public id: number,
     public cantidad: number,
-    public pedido: Pedido,
+    public pedido: Pedido | null,
     public comida: Comida,
     public adicionales: Adicional[] = [],
+    public subtotal?: number,
   ) {}
 }

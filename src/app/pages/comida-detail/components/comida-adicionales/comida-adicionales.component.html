@@ -9,7 +9,12 @@
       @for (adic of cat.adicionales; track adic.id) {
         <label class="item-acomp-row">
           <div class="info-acomp">
-            <input type="checkbox" class="checkbox-acomp" />
+            <input
+              type="checkbox"
+              class="checkbox-acomp"
+              [checked]="seleccionadosIds.includes(adic.id)"
+              (change)="toggleAdicional(adic.id, $event)"
+            />
             <span class="texto-acomp-nombre">{{ adic.nombre }}</span>
           </div>
           <span class="badge-acomp-incluido">+${{ adic.precio | number:'1.0-0' }}</span>

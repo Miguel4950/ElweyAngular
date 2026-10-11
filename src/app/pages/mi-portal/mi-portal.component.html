@@ -136,6 +136,32 @@
       </form>
     </div>
 
+    <!-- Tarjeta: Historial de Pedidos del Cliente (cargados con mergeMap desde REST) -->
+    <div class="portal-card" style="margin-top: 24px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h2 class="portal-card-titulo" style="margin-bottom: 0;">Mis Pedidos Recientes ({{ pedidosCliente.length }})</h2>
+        <a [routerLink]="['/comidas/tarjetas']" style="font-size: 12px; font-weight: 700; color: #facc15; text-decoration: none;">+ NUEVO PEDIDO</a>
+      </div>
+
+      @for (ped of pedidosCliente; track ped.id) {
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; margin-bottom: 10px; background: rgba(255, 255, 255, 0.03); border: 1px solid #27272a; border-radius: 10px;">
+          <div>
+            <span style="font-weight: 800; color: #facc15; font-size: 14px;">Pedido #{{ ped.id }}</span>
+            <span style="margin-left: 10px; padding: 3px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; background: rgba(56, 189, 248, 0.15); color: #38bdf8;">{{ ped.estado }}</span>
+            <p style="margin: 4px 0 0; font-size: 12px; color: #a1a1aa;">
+              {{ ped.items ? ped.items.length : 0 }} ítem(s) · Domiciliario: {{ ped.domiciliario ? ped.domiciliario.nombre : 'Por asignar' }}
+            </p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-weight: 800; color: #4ade80; font-size: 15px;">${{ (ped.total ?? 0) | number:'1.0-0' }}</span>
+            <a [routerLink]="['/pedidos', ped.id]" style="padding: 6px 12px; border-radius: 6px; background: #27272a; color: #fff; font-size: 12px; font-weight: 700; text-decoration: none;">Ver Detalle &rarr;</a>
+          </div>
+        </div>
+      } @empty {
+        <p style="color: #a1a1aa; font-size: 13px; margin: 0;">Aún no tienes pedidos registrados para esta cuenta.</p>
+      }
+    </div>
+
     <!-- Zona de Peligro: Eliminar Cuenta -->
     <div class="zona-peligro">
       <div class="zona-peligro-info">

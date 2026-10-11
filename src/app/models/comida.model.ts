@@ -10,5 +10,7 @@ export class Comida {
     public etiqueta: string,
     public activo: boolean = true,
     public categoria: Categoria,
+    public imagenUrl?: string,
+    public nombreCategoria?: string,
   ) {}
 }

@@ -35,6 +35,7 @@ export class RegistroComponent {
   });
 
   onSubmit(): void {
+    // 1. Validar que el formulario esté completo antes de enviar al backend
     if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
       this.errorMessage = 'Por favor completa todos los campos obligatorios correctamente.';
@@ -42,16 +43,7 @@ export class RegistroComponent {
     }
 
     const { nombre, correo, contrasena, telefono, direccion } = this.registroForm.value;
-
     const emailLimpio = (correo ?? '').trim().toLowerCase();
-    const existente = this.clienteService.getClientes().find(
-      (c) => c.correo.trim().toLowerCase() === emailLimpio
-    );
-
-    if (existente) {
-      this.errorMessage = 'Ya existe una cuenta registrada con este correo electrónico.';
-      return;
-    }
 
     const nuevoCliente = new Cliente(
       0,
@@ -61,10 +53,22 @@ export class RegistroComponent {
       telefono!.trim(),
       direccion!.trim(),
       true,
-      []
+      [],
+      '',
+      emailLimpio,
+      contrasena!,
     );
 
-    this.clienteService.addCliente(nuevoCliente);
-    this.router.navigate(['/cliente/portal'], { queryParams: { bienvenido: 'true' } });
+    // 2. Registrar cliente mediante POST /clientes/add y redirigir a su portal
+    this.clienteService.addCliente(nuevoCliente).subscribe({
+      next: () => {
+        this.errorMessage = '';
+        this.router.navigate(['/cliente/portal'], { queryParams: { bienvenido: 'true' } });
+      },
+      error: (err) => {
+        this.errorMessage =
+          err?.error?.mensaje || 'Ya existe una cuenta registrada con este correo electrónico.';
+      },
+    });
   }
 }

@@ -1,0 +1,243 @@
+.main-admin-clientes {
+  min-height: 82vh;
+  background-color: #0b0b0e;
+  color: #f4f4f5;
+  padding: 40px 20px 60px;
+}
+
+.contenedor-admin-clientes {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header-admin-clientes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.subtitulo-admin {
+  color: #facc15;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.titulo-admin {
+  font-size: 34px;
+  font-weight: 900;
+  margin: 4px 0 8px;
+  color: #ffffff;
+}
+
+.desc-admin {
+  color: #a1a1aa;
+  font-size: 14px;
+  margin: 0;
+}
+
+.acciones-top-clientes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.input-buscar-cliente {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #3f3f46;
+  background: #141417;
+  color: #ffffff;
+  min-width: 260px;
+}
+
+.btn-nuevo-cliente {
+  padding: 11px 18px;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.alerta-ok {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid #4ade80;
+  color: #86efac;
+}
+
+.btn-cerrar {
+  background: transparent;
+  border: none;
+  color: #86efac;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.card-form-cliente {
+  padding: 24px;
+  background: #141417;
+  border: 1px solid #27272a;
+  border-radius: 14px;
+  margin-bottom: 26px;
+}
+
+.titulo-form-cliente {
+  margin: 0 0 18px;
+  color: #facc15;
+  font-size: 20px;
+}
+
+.grid-form-cliente {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  align-items: end;
+}
+
+.label-campo {
+  display: block;
+  font-size: 11px;
+  color: #a1a1aa;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.input-campo {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #3f3f46;
+  background: #18181b;
+  color: #ffffff;
+}
+
+.botones-form-cliente {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-cancelar-cliente {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #52525b;
+  background: transparent;
+  color: #e4e4e7;
+  cursor: pointer;
+}
+
+.grid-clientes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 20px;
+}
+
+.tarjeta-cliente {
+  background: #141417;
+  border: 1px solid #27272a;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cabecera-tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.avatar-cliente {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(250, 204, 21, 0.15);
+  border: 1px solid #facc15;
+  color: #facc15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.id-badge {
+  font-size: 11px;
+  color: #facc15;
+  font-weight: 800;
+}
+
+.nombre-cliente {
+  margin: 2px 0 0;
+  font-size: 17px;
+  color: #ffffff;
+}
+
+.cuerpo-tarjeta p {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #d4d4d8;
+}
+
+.pie-tarjeta {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid #27272a;
+}
+
+.btn-portal-cliente {
+  flex: 1;
+  text-align: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #27272a;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-editar-cliente {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #facc15;
+  background: transparent;
+  color: #facc15;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-borrar-cliente {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ef4444;
+  background: transparent;
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vacio-clientes {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: #a1a1aa;
+}

@@ -1,0 +1,120 @@
+<app-navbar></app-navbar>
+
+<main class="main-pedido-detalle">
+  <div class="contenedor-pedido-detalle">
+    @if (pedido; as p) {
+      <div class="barra-volver">
+        <a [routerLink]="['/pedidos']" class="link-volver">&larr; Volver a Gestión de Pedidos</a>
+        <button type="button" (click)="eliminarPedido()" class="btn-eliminar-orden">
+          Eliminar Pedido #{{ p.id }}
+        </button>
+      </div>
+
+      @if (mensajeActualizado) {
+        <div class="alerta-detalle-ok">
+          <span>✅ {{ mensajeActualizado }}</span>
+        </div>
+      }
+
+      <!-- Encabezado del Pedido -->
+      <div class="card-resumen-orden">
+        <div>
+          <span class="subtitulo-orden">ORDEN DE RESTAURANTE</span>
+          <h1 class="titulo-orden">Pedido #{{ p.id }}</h1>
+          <p class="fecha-orden">
+            Creado: {{ (p.fechaCreacion || p.fecha_creacion) | date:'medium' }}
+            @if (p.fechaEntrega || p.fecha_entrega) {
+              · Entregado: {{ (p.fechaEntrega || p.fecha_entrega) | date:'medium' }}
+            }
+          </p>
+        </div>
+
+        <div class="caja-estado-total">
+          <div>
+            <label class="label-control">ESTADO ACTUAL</label>
+            <select [value]="p.estado" (change)="cambiarEstado($event)" class="select-control">
+              @for (est of estadosDisponibles; track est) {
+                <option [value]="est" [selected]="p.estado === est">{{ est }}</option>
+              }
+            </select>
+          </div>
+          <div class="bloque-total">
+            <span class="label-control">TOTAL DEL PEDIDO</span>
+            <span class="valor-total">${{ (p.total ?? 0) | number:'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjetas de Cliente y Domiciliario -->
+      <div class="grid-actores">
+        <div class="card-actor">
+          <h3 class="titulo-actor">👤 Datos del Cliente</h3>
+          @if (p.cliente; as cli) {
+            <p class="dato-actor"><strong>Nombre:</strong> {{ cli.nombreCompleto || cli.nombre }}</p>
+            <p class="dato-actor"><strong>Correo:</strong> {{ cli.correo || cli.email }}</p>
+            <p class="dato-actor"><strong>Teléfono:</strong> {{ cli.telefono }}</p>
+            <p class="dato-actor"><strong>Dirección de Entrega:</strong> {{ cli.direccion }}</p>
+          }
+        </div>
+
+        <div class="card-actor">
+          <h3 class="titulo-actor">🛵 Domiciliario Asignado</h3>
+          @if (p.domiciliario; as dom) {
+            <p class="dato-actor"><strong>Repartidor:</strong> {{ dom.nombre }}</p>
+            <p class="dato-actor"><strong>Cédula:</strong> {{ dom.cedula }}</p>
+            <p class="dato-actor"><strong>Celular:</strong> {{ dom.celular }}</p>
+          } @else {
+            <p class="dato-actor">Sin domiciliario asignado.</p>
+          }
+          <div style="margin-top: 12px;">
+            <label class="label-control">CAMBIAR / ASIGNAR DOMICILIARIO</label>
+            <select (change)="cambiarDomiciliario($event)" class="select-control" style="width: 100%;">
+              <option value="">-- Seleccionar Domiciliario --</option>
+              @for (d of domiciliarios; track d.id) {
+                <option [value]="d.id" [selected]="p.domiciliario?.id === d.id">
+                  {{ d.nombre }} ({{ d.disponible ? 'Disponible' : 'En ruta' }})
+                </option>
+              }
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ítems del Pedido y Adicionales -->
+      <div class="card-items">
+        <h2 class="titulo-items">Platos y Adicionales Solicitados ({{ p.items ? p.items.length : 0 }})</h2>
+        @for (item of p.items; track item.id) {
+          <div class="fila-item">
+            <div class="info-item">
+              <div class="nombre-plato-item">
+                {{ item.cantidad }}x {{ item.comida ? item.comida.nombre : 'Plato' }}
+                <span class="precio-unitario">(${{ (item.comida ? item.comida.precio : 0) | number:'1.0-0' }} c/u)</span>
+              </div>
+              <div class="adicionales-item">
+                @if (item.adicionales && item.adicionales.length > 0) {
+                  @for (ad of item.adicionales; track ad.id) {
+                    <span class="chip-adicional">+ {{ ad.nombre }} (${{ ad.precio | number:'1.0-0' }})</span>
+                  }
+                } @else {
+                  <span class="sin-adic-item">Sin adicionales extra</span>
+                }
+              </div>
+            </div>
+            <div class="subtotal-item">
+              ${{ (item.subtotal ?? 0) | number:'1.0-0' }}
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="card-items" style="text-align: center; padding: 40px;">
+        <h2>Pedido no encontrado</h2>
+        <p style="color: #a1a1aa;">No existe un pedido con el ID especificado.</p>
+        <a [routerLink]="['/pedidos']" class="link-volver">Volver a Pedidos</a>
+      </div>
+    }
+  </div>
+</main>
+
+<app-calaveras></app-calaveras>
+<app-footer></app-footer>
