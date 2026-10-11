@@ -1,12 +1,12 @@
 <div class="seccion-adicionales">
   <div class="encabezado-adicionales">
     <span class="titulo-acomp-seccion">Adicionales Disponibles</span>
-    <span class="subtitulo-acomp-seccion">Según categoría ({{ categoria() ? categoria()?.nombre : 'General' }})</span>
+    <span class="subtitulo-acomp-seccion">Según categoría ({{ categoria() ? categoria()!.nombre : 'General' }})</span>
   </div>
 
   <div class="lista-adicionales">
-    @if (categoria(); as cat) {
-      @for (adic of cat.adicionales; track adic.id) {
+    @if (categoria() && categoria()!.adicionales && categoria()!.adicionales!.length > 0) {
+      @for (adic of categoria()!.adicionales!; track $index) {
         <label class="item-acomp-row">
           <div class="info-acomp">
             <input
@@ -17,12 +17,8 @@
             />
             <span class="texto-acomp-nombre">{{ adic.nombre }}</span>
           </div>
-          <span class="badge-acomp-incluido">+${{ adic.precio | number:'1.0-0' }}</span>
+          <span class="badge-acomp-incluido">+${{ adic.precio }}</span>
         </label>
-      } @empty {
-        <div class="sin-adicionales">
-          No hay adicionales registrados para esta categoría.
-        </div>
       }
     } @else {
       <div class="sin-adicionales">

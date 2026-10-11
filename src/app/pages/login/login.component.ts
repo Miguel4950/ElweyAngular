@@ -11,7 +11,6 @@ import { Cliente } from '../../models/cliente.model';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -23,7 +22,7 @@ import { Cliente } from '../../models/cliente.model';
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
-  // 1. Inyección de los 3 servicios de autenticación por entidad (Cliente, Operador, Administrador)
+  // DI
   private clienteService = inject(ClienteService);
   private operadorService = inject(OperadorService);
   private administradorService = inject(AdministradorService);
@@ -68,14 +67,14 @@ export class LoginComponent implements OnInit {
       this.operadorService.autenticar(identificador, password).subscribe({
         next: (op) => {
           this.errorMessage = '';
-          const sesionOp = new Cliente(
-            op.id,
-            op.nombre,
-            `${op.usuario}@elwey.com`,
-            op.contrasena,
-            '3000000000',
-            'Sede Principal El Wey',
-          );
+          const sesionOp: Cliente = {
+            id: op.id,
+            nombre: op.nombre,
+            correo: `${op.usuario}@elwey.com`,
+            contrasena: op.contrasena,
+            telefono: '3000000000',
+            direccion: 'Sede Principal El Wey',
+          };
           this.clienteService.setClienteActual(sesionOp, 'OPERADOR');
           this.router.navigate(['/pedidos']);
         },
@@ -92,14 +91,14 @@ export class LoginComponent implements OnInit {
       this.administradorService.autenticar(identificador, password).subscribe({
         next: (adm) => {
           this.errorMessage = '';
-          const sesionAdmin = new Cliente(
-            adm.id,
-            `Admin (${adm.usuario})`,
-            `${adm.usuario}@elwey.com`,
-            adm.contrasena,
-            '3000000000',
-            'Administración Central',
-          );
+          const sesionAdmin: Cliente = {
+            id: adm.id,
+            nombre: `Admin (${adm.usuario})`,
+            correo: `${adm.usuario}@elwey.com`,
+            contrasena: adm.contrasena,
+            telefono: '3000000000',
+            direccion: 'Administración Central',
+          };
           this.clienteService.setClienteActual(sesionAdmin, 'ADMIN');
           this.router.navigate(['/comidas/tabla']);
         },

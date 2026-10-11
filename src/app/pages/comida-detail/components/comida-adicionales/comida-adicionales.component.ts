@@ -1,10 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
 import { Categoria } from '../../../../models/categoria.model';
 
 @Component({
   selector: 'app-comida-adicionales',
-  imports: [DecimalPipe],
+  imports: [],
   templateUrl: './comida-adicionales.component.html',
   styleUrl: './comida-adicionales.component.css',
 })

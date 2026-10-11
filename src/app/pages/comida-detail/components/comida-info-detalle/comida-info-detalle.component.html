@@ -1,34 +1,29 @@
 <div class="col-info-detalle">
-  @if (comida(); as c) {
+  @if (comida()) {
     <div>
       <p class="subtitulo-detalle-ficha">
-        Categoría: <span>{{ c.categoria ? c.categoria.nombre : 'General' }}</span>
+        Categoría: <span>{{ comida()!.categoria ? comida()!.categoria.nombre : 'General' }}</span>
       </p>
-      <h1 class="titulo-detalle-plato">{{ c.nombre }}</h1>
+      <h1 class="titulo-detalle-plato">{{ comida()!.nombre }}</h1>
 
-      <!-- Badge especial si es la favorita de jaimes -->
-      @if (c.id === 8 || c.nombre.toLowerCase().includes('jaime')) {
+      @if (comida()!.id === 8 || comida()!.nombre.toLowerCase().includes('jaime')) {
         <div class="badge-jaime-favorita">
           (La favorita de jaimes)
         </div>
       }
 
-      <!-- Precio -->
       <div class="fila-precio-detalle">
-        <span class="precio-grande-detalle">${{ c.precio | number:'1.0-0' }}</span>
+        <span class="precio-grande-detalle">${{ comida()!.precio }}</span>
         <span class="precio-unidad-detalle">/ Porción</span>
       </div>
 
-      <!-- Descripción -->
-      <p class="desc-completa-detalle">{{ c.descripcion }}</p>
+      <p class="desc-completa-detalle">{{ comida()!.descripcion }}</p>
 
-      <!-- Adicionales Disponibles (Subcomponente fraccionado) -->
       <app-comida-adicionales
-        [categoria]="c.categoria"
+        [categoria]="comida()!.categoria"
         (adicionalesChange)="actualizarAdicionales($event)"
       ></app-comida-adicionales>
 
-      <!-- Selector de cantidad y botón de ordenar -->
       <div style="display: flex; align-items: center; gap: 12px; margin-top: 18px; padding: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(250, 204, 21, 0.25); border-radius: 10px;">
         <label for="cantidad-input" style="font-size: 13px; font-weight: 700; color: #facc15; text-transform: uppercase;">Cantidad:</label>
         <input
@@ -41,7 +36,7 @@
         />
         <button
           type="button"
-          (click)="ordenarPlato(c)"
+          (click)="ordenarPlato(comida()!)"
           [disabled]="procesandoPedido"
           style="flex: 1; padding: 11px 18px; border-radius: 8px; border: none; background: linear-gradient(135deg, #ef4444, #dc2626); color: #fff; font-weight: 800; letter-spacing: 0.5px; cursor: pointer; text-transform: uppercase;"
         >
@@ -50,12 +45,11 @@
       </div>
     </div>
 
-    <!-- Botones de Acción Inferiores -->
     <div class="footer-botones-detalle">
       <a [routerLink]="['/comidas/tarjetas']" class="btn-volver-tabla-detalle">
         &larr; Volver al Catálogo
       </a>
-      <a [routerLink]="['/comidas/editar', c.id]" class="btn-editar-detalle">
+      <a [routerLink]="['/comidas/editar', comida()!.id]" class="btn-editar-detalle">
         Editar este Plato
       </a>
     </div>

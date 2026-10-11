@@ -1,6 +1,3 @@
-<!-- =========================================================================
-     SECCION DE MENU CON CSS GRID Y DATOS DINAMICOS
-     ========================================================================= -->
 <section id="menu">
   <div class="contenedor-seccion-menu">
     <div class="encabezado-seccion">
@@ -11,7 +8,7 @@
     <div class="contenedor-grid">
       @for (item of comidaArray(); track $index) {
         <article class="tarjeta-plato">
-          <img [src]="item.imagen_url" [alt]="item.nombre"
+          <img [src]="item.imagen_url || item.imagenUrl" [alt]="item.nombre"
             width="240" height="180" class="img-plato" />
           <div class="contenido-plato">
             <span class="etiqueta-plato"
@@ -22,7 +19,7 @@
             <h3>{{ item.nombre }}</h3>
             <p>{{ item.descripcion }}</p>
             <div class="fila-precio">
-              <span class="texto-precio">${{ item.precio | number:'1.0-0' }}</span>
+              <span class="texto-precio">${{ item.precio }}</span>
               <a [routerLink]="['/comidas', item.id]" class="enlace-pedir">VER DETALLE &rarr;</a>
             </div>
           </div>
@@ -30,7 +27,6 @@
       }
     </div>
 
-    <!-- Botones de Acción al Menú Completo -->
     <div class="contenedor-btn-menu">
       <a [routerLink]="['/comidas/tarjetas']" class="btn-ver-menu-completo">Ver Todas en Tarjetas</a>
       <a [routerLink]="['/comidas/tabla']" class="btn-ver-menu-completo btn-ver-menu-tabla">Ver Todas en Tabla</a>

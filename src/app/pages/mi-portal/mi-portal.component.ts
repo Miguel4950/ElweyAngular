@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DecimalPipe } from '@angular/common';
 import { mergeMap } from 'rxjs';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
@@ -13,11 +12,9 @@ import { Pedido } from '../../models/pedido.model';
 
 @Component({
   selector: 'app-mi-portal',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
-    DecimalPipe,
     NavbarComponent,
     FooterComponent,
     CalaverasComponent,
@@ -26,6 +23,7 @@ import { Pedido } from '../../models/pedido.model';
   styleUrl: './mi-portal.component.css',
 })
 export class MiPortalComponent implements OnInit {
+  // DI
   private clienteService = inject(ClienteService);
   private pedidoService = inject(PedidoService);
   private router = inject(Router);
@@ -109,20 +107,20 @@ export class MiPortalComponent implements OnInit {
     const { nombre, correo, telefono, direccion, fechaRegistro } = this.portalForm.value;
     const correoLimpio = correo!.trim();
 
-    const clienteActualizado = new Cliente(
-      this.cliente.id,
-      nombre!.trim(),
-      correoLimpio,
-      this.cliente.contrasena || this.cliente.password || '',
-      telefono!.trim(),
-      direccion!.trim(),
-      this.cliente.activo ?? true,
-      [],
-      '',
-      correoLimpio,
-      this.cliente.contrasena || this.cliente.password || '',
-      fechaRegistro || this.cliente.fechaRegistro,
-    );
+    const clienteActualizado: Cliente = {
+      id: this.cliente.id,
+      nombre: nombre!.trim(),
+      correo: correoLimpio,
+      contrasena: this.cliente.contrasena || this.cliente.password || '',
+      telefono: telefono!.trim(),
+      direccion: direccion!.trim(),
+      activo: this.cliente.activo ?? true,
+      pedidos: [],
+      apellido: '',
+      email: correoLimpio,
+      password: this.cliente.contrasena || this.cliente.password || '',
+      fechaRegistro: fechaRegistro || this.cliente.fechaRegistro,
+    };
 
     // 1. Enviar actualización por PUT /clientes/update
     this.clienteService.updateCliente(this.cliente.id, clienteActualizado).subscribe({

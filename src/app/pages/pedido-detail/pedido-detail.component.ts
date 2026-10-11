@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { DecimalPipe, DatePipe } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
@@ -11,11 +10,8 @@ import { DomiciliarioService } from '../../service/domiciliario.service';
 
 @Component({
   selector: 'app-pedido-detail',
-  standalone: true,
   imports: [
     RouterLink,
-    DecimalPipe,
-    DatePipe,
     NavbarComponent,
     FooterComponent,
     CalaverasComponent,
@@ -24,7 +20,7 @@ import { DomiciliarioService } from '../../service/domiciliario.service';
   styleUrl: './pedido-detail.component.css',
 })
 export class PedidoDetailComponent implements OnInit {
-  // 1. Inyección de servicios REST para consultar el pedido y los domiciliarios
+  // DI
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private pedidoService = inject(PedidoService);
@@ -35,11 +31,10 @@ export class PedidoDetailComponent implements OnInit {
   mensajeActualizado: string = '';
 
   estadosDisponibles: string[] = [
-    'RECIBIDO',
-    'COCINANDO',
-    'ENVIADO',
-    'ENTREGADO',
-    'CANCELADO',
+    'En preparación',
+    'En camino',
+    'Entregado',
+    'Cancelado',
   ];
 
   ngOnInit(): void {

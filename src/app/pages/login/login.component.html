@@ -2,7 +2,6 @@
 
 <main class="login-main">
   <div class="login-card">
-    <!-- Encabezado de la Tarjeta -->
     <div class="login-header">
       <span class="login-subtitle">Acceso al Sistema</span>
       <h1 class="login-title">Iniciar Sesión</h1>
@@ -11,10 +10,8 @@
       </p>
     </div>
 
-    <!-- Formulario reactivo de login -->
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-login" autocomplete="off">
 
-      <!-- Alerta de Error -->
       @if (errorMessage) {
         <div class="alerta-error">
           <svg class="alerta-icono" fill="currentColor" viewBox="0 0 20 20">
@@ -28,21 +25,18 @@
         </div>
       }
 
-      <!-- Alerta de Éxito tras logout -->
       @if (logoutMessage) {
         <div class="alerta-exito">
           <span>Has cerrado sesión con éxito.</span>
         </div>
       }
 
-      <!-- Alerta de Info Mi Portal -->
       @if (portalAlert) {
         <div class="alerta-info">
           <span>Inicia sesión para acceder a <strong>Mi Portal</strong>, o crea una cuenta nueva.</span>
         </div>
       }
 
-      <!-- Selector de Perfil / Entidad de Login -->
       <div class="form-grupo">
         <label for="rol" class="form-label">Perfil de Acceso</label>
         <select id="rol" formControlName="rol" class="form-input" style="cursor: pointer;">
@@ -52,7 +46,6 @@
         </select>
       </div>
 
-      <!-- Campo 1: Correo Electrónico o Usuario -->
       <div class="form-grupo">
         <label for="email" class="form-label">Correo Electrónico o Usuario</label>
         <input
@@ -70,7 +63,6 @@
         }
       </div>
 
-      <!-- Campo 2: Contraseña -->
       <div class="form-grupo">
         <label for="password" class="form-label">Contraseña</label>
         <input
@@ -88,20 +80,17 @@
         }
       </div>
 
-      <!-- Botón de Envío -->
       <button type="submit" id="btn-submit-login" class="btn-submit-login">
         INICIAR SESIÓN
       </button>
     </form>
 
-    <!-- Enlace a Registro -->
     <div class="login-footer-box">
       <a [routerLink]="['/registro']" class="link-registro">
         ¿No tienes cuenta? Regístrate aquí
       </a>
     </div>
 
-    <!-- Credenciales de prueba oficiales (Clic para autocompletar) -->
     <div class="caja-credenciales">
       <p class="titulo-credenciales">Credenciales de prueba (clic para rellenar):</p>
       <div class="lista-credenciales">

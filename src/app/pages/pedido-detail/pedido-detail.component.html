@@ -2,11 +2,11 @@
 
 <main class="main-pedido-detalle">
   <div class="contenedor-pedido-detalle">
-    @if (pedido; as p) {
+    @if (pedido) {
       <div class="barra-volver">
         <a [routerLink]="['/pedidos']" class="link-volver">&larr; Volver a Gestión de Pedidos</a>
         <button type="button" (click)="eliminarPedido()" class="btn-eliminar-orden">
-          Eliminar Pedido #{{ p.id }}
+          Eliminar Pedido #{{ pedido.id }}
         </button>
       </div>
 
@@ -16,15 +16,14 @@
         </div>
       }
 
-      <!-- Encabezado del Pedido -->
       <div class="card-resumen-orden">
         <div>
           <span class="subtitulo-orden">ORDEN DE RESTAURANTE</span>
-          <h1 class="titulo-orden">Pedido #{{ p.id }}</h1>
+          <h1 class="titulo-orden">Pedido #{{ pedido.id }}</h1>
           <p class="fecha-orden">
-            Creado: {{ (p.fechaCreacion || p.fecha_creacion) | date:'medium' }}
-            @if (p.fechaEntrega || p.fecha_entrega) {
-              · Entregado: {{ (p.fechaEntrega || p.fecha_entrega) | date:'medium' }}
+            Creado: {{ pedido.fechaCreacion || pedido.fecha_creacion }}
+            @if (pedido.fechaEntrega || pedido.fecha_entrega) {
+              · Entregado: {{ pedido.fechaEntrega || pedido.fecha_entrega }}
             }
           </p>
         </div>
@@ -32,37 +31,42 @@
         <div class="caja-estado-total">
           <div>
             <label class="label-control">ESTADO ACTUAL</label>
-            <select [value]="p.estado" (change)="cambiarEstado($event)" class="select-control">
-              @for (est of estadosDisponibles; track est) {
-                <option [value]="est" [selected]="p.estado === est">{{ est }}</option>
+            <select
+              [value]="pedido.estado"
+              (change)="cambiarEstado($event)"
+              class="select-control"
+              [style.borderColor]="pedido.estado === 'Entregado' ? '#4ade80' : pedido.estado === 'Cancelado' ? '#ef4444' : pedido.estado === 'En camino' ? '#38bdf8' : '#facc15'"
+              [style.color]="pedido.estado === 'Entregado' ? '#4ade80' : pedido.estado === 'Cancelado' ? '#f87171' : pedido.estado === 'En camino' ? '#38bdf8' : '#facc15'"
+            >
+              @for (est of estadosDisponibles; track $index) {
+                <option [value]="est" [selected]="pedido.estado === est">{{ est }}</option>
               }
             </select>
           </div>
           <div class="bloque-total">
             <span class="label-control">TOTAL DEL PEDIDO</span>
-            <span class="valor-total">${{ (p.total ?? 0) | number:'1.0-0' }}</span>
+            <span class="valor-total">${{ pedido.total ?? 0 }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Tarjetas de Cliente y Domiciliario -->
       <div class="grid-actores">
         <div class="card-actor">
           <h3 class="titulo-actor">👤 Datos del Cliente</h3>
-          @if (p.cliente; as cli) {
-            <p class="dato-actor"><strong>Nombre:</strong> {{ cli.nombreCompleto || cli.nombre }}</p>
-            <p class="dato-actor"><strong>Correo:</strong> {{ cli.correo || cli.email }}</p>
-            <p class="dato-actor"><strong>Teléfono:</strong> {{ cli.telefono }}</p>
-            <p class="dato-actor"><strong>Dirección de Entrega:</strong> {{ cli.direccion }}</p>
+          @if (pedido.cliente) {
+            <p class="dato-actor"><strong>Nombre:</strong> {{ pedido.cliente.nombreCompleto || pedido.cliente.nombre }}</p>
+            <p class="dato-actor"><strong>Correo:</strong> {{ pedido.cliente.correo || pedido.cliente.email }}</p>
+            <p class="dato-actor"><strong>Teléfono:</strong> {{ pedido.cliente.telefono }}</p>
+            <p class="dato-actor"><strong>Dirección de Entrega:</strong> {{ pedido.cliente.direccion }}</p>
           }
         </div>
 
         <div class="card-actor">
           <h3 class="titulo-actor">🛵 Domiciliario Asignado</h3>
-          @if (p.domiciliario; as dom) {
-            <p class="dato-actor"><strong>Repartidor:</strong> {{ dom.nombre }}</p>
-            <p class="dato-actor"><strong>Cédula:</strong> {{ dom.cedula }}</p>
-            <p class="dato-actor"><strong>Celular:</strong> {{ dom.celular }}</p>
+          @if (pedido.domiciliario) {
+            <p class="dato-actor"><strong>Repartidor:</strong> {{ pedido.domiciliario.nombre }}</p>
+            <p class="dato-actor"><strong>Cédula:</strong> {{ pedido.domiciliario.cedula }}</p>
+            <p class="dato-actor"><strong>Celular:</strong> {{ pedido.domiciliario.celular }}</p>
           } @else {
             <p class="dato-actor">Sin domiciliario asignado.</p>
           }
@@ -70,8 +74,8 @@
             <label class="label-control">CAMBIAR / ASIGNAR DOMICILIARIO</label>
             <select (change)="cambiarDomiciliario($event)" class="select-control" style="width: 100%;">
               <option value="">-- Seleccionar Domiciliario --</option>
-              @for (d of domiciliarios; track d.id) {
-                <option [value]="d.id" [selected]="p.domiciliario?.id === d.id">
+              @for (d of domiciliarios; track $index) {
+                <option [value]="d.id" [selected]="pedido.domiciliario?.id === d.id">
                   {{ d.nombre }} ({{ d.disponible ? 'Disponible' : 'En ruta' }})
                 </option>
               }
@@ -80,20 +84,19 @@
         </div>
       </div>
 
-      <!-- Ítems del Pedido y Adicionales -->
       <div class="card-items">
-        <h2 class="titulo-items">Platos y Adicionales Solicitados ({{ p.items ? p.items.length : 0 }})</h2>
-        @for (item of p.items; track item.id) {
+        <h2 class="titulo-items">Platos y Adicionales Solicitados ({{ pedido.items ? pedido.items.length : 0 }})</h2>
+        @for (item of pedido.items; track $index) {
           <div class="fila-item">
             <div class="info-item">
               <div class="nombre-plato-item">
                 {{ item.cantidad }}x {{ item.comida ? item.comida.nombre : 'Plato' }}
-                <span class="precio-unitario">(${{ (item.comida ? item.comida.precio : 0) | number:'1.0-0' }} c/u)</span>
+                <span class="precio-unitario">(${{ item.comida ? item.comida.precio : 0 }} c/u)</span>
               </div>
               <div class="adicionales-item">
                 @if (item.adicionales && item.adicionales.length > 0) {
-                  @for (ad of item.adicionales; track ad.id) {
-                    <span class="chip-adicional">+ {{ ad.nombre }} (${{ ad.precio | number:'1.0-0' }})</span>
+                  @for (ad of item.adicionales; track $index) {
+                    <span class="chip-adicional">+ {{ ad.nombre }} (${{ ad.precio }})</span>
                   }
                 } @else {
                   <span class="sin-adic-item">Sin adicionales extra</span>
@@ -101,7 +104,7 @@
               </div>
             </div>
             <div class="subtotal-item">
-              ${{ (item.subtotal ?? 0) | number:'1.0-0' }}
+              ${{ item.subtotal ?? 0 }}
             </div>
           </div>
         }

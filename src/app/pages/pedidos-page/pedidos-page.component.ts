@@ -1,6 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DecimalPipe, DatePipe } from '@angular/common';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { CalaverasComponent } from '../../components/calaveras/calaveras.component';
@@ -9,11 +8,8 @@ import { PedidoService } from '../../service/pedido.service';
 
 @Component({
   selector: 'app-pedidos-page',
-  standalone: true,
   imports: [
     RouterLink,
-    DecimalPipe,
-    DatePipe,
     NavbarComponent,
     FooterComponent,
     CalaverasComponent,
@@ -22,7 +18,7 @@ import { PedidoService } from '../../service/pedido.service';
   styleUrl: './pedidos-page.component.css',
 })
 export class PedidosPageComponent implements OnInit {
-  // 1. Inyección de PedidoService para consultar y gestionar órdenes por REST
+  // DI
   private pedidoService = inject(PedidoService);
 
   pedidos: Pedido[] = [];
@@ -30,11 +26,10 @@ export class PedidosPageComponent implements OnInit {
   mensajeExito: string = '';
 
   estadosDisponibles: string[] = [
-    'RECIBIDO',
-    'COCINANDO',
-    'ENVIADO',
-    'ENTREGADO',
-    'CANCELADO',
+    'En preparación',
+    'En camino',
+    'Entregado',
+    'Cancelado',
   ];
 
   ngOnInit(): void {
@@ -53,7 +48,7 @@ export class PedidosPageComponent implements OnInit {
       return this.pedidos;
     }
     return this.pedidos.filter(
-      (p) => p.estado && p.estado.toUpperCase() === this.filtroEstado,
+      (p) => p.estado && p.estado.toLowerCase() === this.filtroEstado.toLowerCase(),
     );
   }
 

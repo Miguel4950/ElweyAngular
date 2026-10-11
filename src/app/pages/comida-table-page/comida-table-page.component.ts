@@ -21,13 +21,11 @@ import { AdicionalService } from '../../service/adicional.service';
 import { DomiciliarioService } from '../../service/domiciliario.service';
 import { OperadorService } from '../../service/operador.service';
 import { AdministradorService } from '../../service/administrador.service';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
-import { filter, mergeMap } from 'rxjs';
-import { DecimalPipe } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { mergeMap } from 'rxjs';
 
 @Component({
   selector: 'app-comida-table-page',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     NavbarComponent,
@@ -36,13 +34,12 @@ import { DecimalPipe } from '@angular/common';
     PageTitleComponent,
     ComidaTableComponent,
     RouterLink,
-    DecimalPipe,
   ],
   templateUrl: './comida-table-page.component.html',
   styleUrl: './comida-table-page.component.css',
 })
 export class ComidaTablePageComponent implements OnInit {
-  // 1. Inyección de servicios REST para todos los catálogos del restaurante
+  // DI
   private comidaService = inject(ComidaService);
   private adicionalService = inject(AdicionalService);
   private domiciliarioService = inject(DomiciliarioService);
@@ -64,7 +61,6 @@ export class ComidaTablePageComponent implements OnInit {
   busqueda: string = '';
   mensajeAlerta: string = '';
 
-  // Formulario Reactivo para CRUD de Adicionales
   editAdicionalId: number | null = null;
   adicionalForm = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
@@ -73,13 +69,11 @@ export class ComidaTablePageComponent implements OnInit {
     categoriaId: new FormControl(1, [Validators.required]),
   });
 
-  // Formulario Reactivo para CRUD de Categorías
   editCategoriaId: number | null = null;
   categoriaForm = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
   });
 
-  // Formulario Reactivo para CRUD de Domiciliarios
   editDomiciliarioId: number | null = null;
   domiciliarioForm = new FormGroup({
     cedula: new FormControl('', [Validators.required]),
@@ -88,7 +82,6 @@ export class ComidaTablePageComponent implements OnInit {
     disponible: new FormControl(true, [Validators.required]),
   });
 
-  // Formulario Reactivo para CRUD de Operadores
   editOperadorId: number | null = null;
   operadorForm = new FormGroup({
     nombre: new FormControl('', [Validators.required]),
@@ -96,7 +89,6 @@ export class ComidaTablePageComponent implements OnInit {
     contrasena: new FormControl('', [Validators.required]),
   });
 
-  // Formulario Reactivo para CRUD de Administradores
   editAdminId: number | null = null;
   adminForm = new FormGroup({
     usuario: new FormControl('', [Validators.required]),
@@ -107,12 +99,6 @@ export class ComidaTablePageComponent implements OnInit {
     // 1. Cargar datos iniciales desde el backend Spring Boot
     this.cargarTodosLosCatalogos();
     this.detectarVista();
-
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.detectarVista();
-      });
   }
 
   cargarTodosLosCatalogos(): void {
@@ -173,16 +159,16 @@ export class ComidaTablePageComponent implements OnInit {
     });
   }
 
-  // ==================== CRUD ADICIONALES ====================
+  // 1. CRUD de Adicionales
   guardarAdicional(): void {
     if (this.adicionalForm.invalid) return;
     const val = this.adicionalForm.value;
-    const payload = new Adicional(
-      this.editAdicionalId ?? 0,
-      val.nombre!.trim(),
-      Number(val.precio),
-      val.disponible ?? true,
-    );
+    const payload: Adicional = {
+      id: this.editAdicionalId ?? 0,
+      nombre: val.nombre!.trim(),
+      precio: Number(val.precio),
+      activo: val.disponible ?? true,
+    };
     const catId = Number(val.categoriaId);
 
     const peticion$ = this.editAdicionalId
@@ -203,7 +189,7 @@ export class ComidaTablePageComponent implements OnInit {
       nombre: adic.nombre,
       precio: adic.precio,
       disponible: adic.activo ?? true,
-      categoriaId: adic.categorias && adic.categorias.length > 0 ? adic.categorias[0].id : 1,
+      categoriaId: adic.categoriaId ?? 1,
     });
   }
 
@@ -218,11 +204,14 @@ export class ComidaTablePageComponent implements OnInit {
     });
   }
 
-  // ==================== CRUD CATEGORÍAS ====================
+  // 2. CRUD de Categorías
   guardarCategoria(): void {
     if (this.categoriaForm.invalid) return;
     const nombre = this.categoriaForm.value.nombre!.trim();
-    const payload = new Categoria(this.editCategoriaId ?? 0, nombre);
+    const payload: Categoria = {
+      id: this.editCategoriaId ?? 0,
+      nombre: nombre,
+    };
 
     const peticion$ = this.editCategoriaId
       ? this.comidaService.updateCategoria(payload)
@@ -248,17 +237,17 @@ export class ComidaTablePageComponent implements OnInit {
     });
   }
 
-  // ==================== CRUD DOMICILIARIOS ====================
+  // 3. CRUD de Domiciliarios
   guardarDomiciliario(): void {
     if (this.domiciliarioForm.invalid) return;
     const val = this.domiciliarioForm.value;
-    const payload = new Domiciliario(
-      this.editDomiciliarioId ?? 0,
-      val.cedula!.trim(),
-      val.nombre!.trim(),
-      val.celular!.trim(),
-      val.disponible ?? true,
-    );
+    const payload: Domiciliario = {
+      id: this.editDomiciliarioId ?? 0,
+      cedula: val.cedula!.trim(),
+      nombre: val.nombre!.trim(),
+      celular: val.celular!.trim(),
+      disponible: val.disponible ?? true,
+    };
 
     const peticion$ = this.editDomiciliarioId
       ? this.domiciliarioService.updateDomiciliario(payload)
@@ -293,16 +282,16 @@ export class ComidaTablePageComponent implements OnInit {
     });
   }
 
-  // ==================== CRUD OPERADORES ====================
+  // 4. CRUD de Operadores
   guardarOperador(): void {
     if (this.operadorForm.invalid) return;
     const val = this.operadorForm.value;
-    const payload = new Operador(
-      this.editOperadorId ?? 0,
-      val.nombre!.trim(),
-      val.usuario!.trim(),
-      val.contrasena!.trim(),
-    );
+    const payload: Operador = {
+      id: this.editOperadorId ?? 0,
+      nombre: val.nombre!.trim(),
+      usuario: val.usuario!.trim(),
+      contrasena: val.contrasena!.trim(),
+    };
 
     const peticion$ = this.editOperadorId
       ? this.operadorService.updateOperador(payload)
@@ -336,15 +325,15 @@ export class ComidaTablePageComponent implements OnInit {
     });
   }
 
-  // ==================== CRUD ADMINISTRADORES ====================
+  // 5. CRUD de Administradores
   guardarAdministrador(): void {
     if (this.adminForm.invalid) return;
     const val = this.adminForm.value;
-    const payload = new Administrador(
-      this.editAdminId ?? 0,
-      val.usuario!.trim(),
-      val.contrasena!.trim(),
-    );
+    const payload: Administrador = {
+      id: this.editAdminId ?? 0,
+      usuario: val.usuario!.trim(),
+      contrasena: val.contrasena!.trim(),
+    };
 
     const peticion$ = this.editAdminId
       ? this.administradorService.updateAdministrador(payload)

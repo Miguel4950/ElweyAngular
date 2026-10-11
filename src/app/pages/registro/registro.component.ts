@@ -9,7 +9,6 @@ import { Cliente } from '../../models/cliente.model';
 
 @Component({
   selector: 'app-registro',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -21,6 +20,7 @@ import { Cliente } from '../../models/cliente.model';
   styleUrl: './registro.component.css',
 })
 export class RegistroComponent {
+  // DI
   private clienteService = inject(ClienteService);
   private router = inject(Router);
 
@@ -45,19 +45,19 @@ export class RegistroComponent {
     const { nombre, correo, contrasena, telefono, direccion } = this.registroForm.value;
     const emailLimpio = (correo ?? '').trim().toLowerCase();
 
-    const nuevoCliente = new Cliente(
-      0,
-      nombre!.trim(),
-      emailLimpio,
-      contrasena!,
-      telefono!.trim(),
-      direccion!.trim(),
-      true,
-      [],
-      '',
-      emailLimpio,
-      contrasena!,
-    );
+    const nuevoCliente: Cliente = {
+      id: 0,
+      nombre: nombre!.trim(),
+      correo: emailLimpio,
+      contrasena: contrasena!,
+      telefono: telefono!.trim(),
+      direccion: direccion!.trim(),
+      activo: true,
+      pedidos: [],
+      apellido: '',
+      email: emailLimpio,
+      password: contrasena!,
+    };
 
     // 2. Registrar cliente mediante POST /clientes/add y redirigir a su portal
     this.clienteService.addCliente(nuevoCliente).subscribe({
