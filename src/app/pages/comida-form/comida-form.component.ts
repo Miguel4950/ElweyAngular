@@ -26,7 +26,7 @@ import { ComidaService } from '../../service/comida.service';
   styleUrl: './comida-form.component.css',
 })
 export class ComidaFormComponent implements OnInit {
-  // 1. Inyección de dependencias funcional
+  // DI
   private comidaService = inject(ComidaService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
@@ -98,10 +98,14 @@ export class ComidaFormComponent implements OnInit {
     }
 
     const val = this.comidaForm.value;
-    const cat =
+    const defaultCat: Categoria = {
+      id: Number(val.categoriaId) || 1,
+      nombre: 'Tacos',
+    };
+    const cat: Categoria =
       this.categorias.find((c) => c.id === Number(val.categoriaId)) ||
       this.categorias[0] ||
-      new Categoria(Number(val.categoriaId) || 1, 'Tacos');
+      defaultCat;
 
     const imgUrl =
       val.imagen_url && val.imagen_url.trim() !== ''

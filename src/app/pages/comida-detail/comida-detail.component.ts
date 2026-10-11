@@ -22,7 +22,7 @@ import { ComidaInfoDetalleComponent } from './components/comida-info-detalle/com
   styleUrl: './comida-detail.component.css',
 })
 export class ComidaDetailComponent implements OnInit {
-  // 1. Inyección de dependencias funcional
+  // DI
   private route = inject(ActivatedRoute);
   private comidaService = inject(ComidaService);
   private adicionalService = inject(AdicionalService);
@@ -39,6 +39,7 @@ export class ComidaDetailComponent implements OnInit {
       .findById(this.comidaId)
       .pipe(
         mergeMap((comidaInfo) => {
+          comidaInfo.imagen_url = comidaInfo.imagen_url || comidaInfo.imagenUrl || '';
           this.comida = comidaInfo;
           return this.adicionalService.findByCategoria(comidaInfo.categoria.id);
         }),

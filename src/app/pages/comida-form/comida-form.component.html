@@ -2,7 +2,6 @@
 
 <main class="main-crear-plato">
   <div class="crear-plato-container">
-    <!-- Tarjeta del formulario idéntica a crear-plato.html -->
     <div class="crear-plato-card">
       <div class="crear-plato-header">
         <h2 class="crear-plato-titulo">
@@ -17,7 +16,6 @@
         (ngSubmit)="handleSubmit()"
         class="crear-plato-form"
       >
-        <!-- Campo 1: Nombre -->
         <div class="campo-grupo">
           <label for="nombre" class="campo-label">NOMBRE DEL PLATO</label>
           <input
@@ -39,7 +37,6 @@
           }
         </div>
 
-        <!-- Campo 2: Descripción -->
         <div class="campo-grupo">
           <label for="descripcion" class="campo-label">DESCRIPCIÓN</label>
           <textarea
@@ -63,9 +60,7 @@
           }
         </div>
 
-        <!-- Fila: Precio + Categoría -->
         <div class="fila-dos-campos">
-          <!-- Precio -->
           <div class="campo-grupo">
             <label for="precio" class="campo-label">PRECIO (COP)</label>
             <input
@@ -93,7 +88,6 @@
             }
           </div>
 
-          <!-- Categoría -->
           <div class="campo-grupo">
             <label for="categoriaId" class="campo-label">CATEGORÍA</label>
             <select
@@ -102,7 +96,7 @@
               class="campo-input campo-select"
             >
               <option value="" disabled>Selecciona categoría...</option>
-              @for (cat of categorias; track cat.id) {
+              @for (cat of categorias; track $index) {
                 <option [value]="cat.id">{{ cat.nombre }}</option>
               }
             </select>
@@ -121,7 +115,6 @@
           </div>
         </div>
 
-        <!-- Fila: Etiqueta + Estado -->
         <div class="fila-dos-campos">
           <div class="campo-grupo">
             <label for="etiqueta" class="campo-label">ETIQUETA</label>
@@ -173,14 +166,13 @@
           </div>
         </div>
 
-        <!-- Campo: URL de Imagen -->
         <div class="campo-grupo">
           <label for="imagen_url" class="campo-label">URL DE IMAGEN</label>
           <input
-            type="url"
+            type="text"
             id="imagen_url"
             formControlName="imagen_url"
-            placeholder="https://ejemplo.com/imagen.jpg"
+            placeholder="https://ejemplo.com/imagen.jpg o /images/comidas/plato.jpg"
             class="campo-input"
           />
           @if (
@@ -195,15 +187,13 @@
               }
               @if (comidaForm.get("imagen_url")?.errors?.["pattern"]) {
                 <small class="campo-error"
-                  >Debe ser una URL válida (ej: https://ejemplo.com/foto.jpg
-                  ).</small
+                  >Debe ser una URL válida (ej: https://ejemplo.com/foto.jpg o /images/...).</small
                 >
               }
             </div>
           }
         </div>
 
-        <!-- Botones de Acción -->
         <div class="crear-plato-acciones">
           <a [routerLink]="['/comidas']" class="btn-cancelar"> CANCELAR </a>
           <button
