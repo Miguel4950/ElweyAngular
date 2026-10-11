@@ -1,8 +1,7 @@
-export class Operador {
-  constructor(
-    public id: number,
-    public nombre: string,
-    public usuario: string,
-    public contrasena: string,
-  ) {}
+// buena practica
+export interface Operador {
+  id: number;
+  nombre: string;
+  usuario: string;
+  contrasena: string;
 }

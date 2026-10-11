@@ -1,16 +1,15 @@
 import { Categoria } from './categoria.model';
 
-export class Comida {
-  constructor(
-    public id: number,
-    public nombre: string,
-    public precio: number,
-    public descripcion: string,
-    public imagen_url: string,
-    public etiqueta: string,
-    public activo: boolean = true,
-    public categoria: Categoria,
-    public imagenUrl?: string,
-    public nombreCategoria?: string,
-  ) {}
+// buena practica
+export interface Comida {
+  id: number;
+  nombre: string;
+  precio: number;
+  descripcion: string;
+  imagen_url: string;
+  etiqueta: string;
+  activo: boolean;
+  categoria: Categoria;
+  imagenUrl?: string;
+  nombreCategoria?: string;
 }

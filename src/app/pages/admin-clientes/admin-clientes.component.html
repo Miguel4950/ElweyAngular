@@ -2,7 +2,6 @@
 
 <main class="main-admin-clientes">
   <div class="contenedor-admin-clientes">
-    <!-- Encabezado -->
     <div class="header-admin-clientes">
       <div>
         <span class="subtitulo-admin">DIRECTORIO ADMINISTRATIVO</span>
@@ -32,7 +31,6 @@
       </div>
     }
 
-    <!-- Formulario Reactivo Desplegable para Crear / Editar Cliente -->
     @if (mostrarFormulario) {
       <div class="card-form-cliente">
         <h2 class="titulo-form-cliente">
@@ -78,9 +76,8 @@
       </div>
     }
 
-    <!-- Cuadrícula de Tarjetas de Clientes (idéntica a admin-clientes.html de Spring Boot) -->
     <div class="grid-clientes">
-      @for (cli of clientesFiltrados; track cli.id) {
+      @for (cli of clientesFiltrados; track $index) {
         <article class="tarjeta-cliente">
           <div class="cabecera-tarjeta">
             <div class="avatar-cliente">
@@ -111,7 +108,8 @@
             </button>
           </div>
         </article>
-      } @empty {
+      }
+      @if (clientesFiltrados.length === 0) {
         <div class="vacio-clientes">
           No se encontraron clientes con ese criterio de búsqueda.
         </div>

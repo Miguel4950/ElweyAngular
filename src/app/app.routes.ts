@@ -79,8 +79,4 @@ export const routes: Routes = [
     path: 'cliente/portal/:id',
     component: MiPortalComponent,
   },
-  {
-    path: '**',
-    redirectTo: '',
-  },
 ];

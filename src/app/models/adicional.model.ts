@@ -1,12 +1,12 @@
 import { Categoria } from './categoria.model';
 
-export class Adicional {
-  constructor(
-    public id: number,
-    public nombre: string,
-    public precio: number,
-    public activo: boolean = true,
-    public categorias: Categoria[] = [],
-    public nombresCategorias?: string,
-  ) {}
+// buena practica
+export interface Adicional {
+  id: number;
+  nombre: string;
+  precio: number;
+  activo?: boolean;
+  categorias?: Categoria[];
+  categoriaId?: number;
+  nombresCategorias?: string;
 }

@@ -15,7 +15,6 @@ import { ClienteService } from '../../service/cliente.service';
 
 @Component({
   selector: 'app-admin-clientes',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     RouterLink,
@@ -27,7 +26,7 @@ import { ClienteService } from '../../service/cliente.service';
   styleUrl: './admin-clientes.component.css',
 })
 export class AdminClientesComponent implements OnInit {
-  // 1. Inyección de ClienteService para consumir el CRUD REST de clientes
+  // DI
   private clienteService = inject(ClienteService);
 
   clientes: Cliente[] = [];
@@ -51,7 +50,7 @@ export class AdminClientesComponent implements OnInit {
   }
 
   cargarClientes(): void {
-    // 1. Consultar todos los clientes registrados en GET /clientes/all
+    // 1. Consultar clientes en GET /clientes/all
     this.clienteService.findAll().subscribe((data) => {
       this.clientes = data;
     });
@@ -118,20 +117,21 @@ export class AdminClientesComponent implements OnInit {
     const val = this.clienteForm.value;
     const correoLimpio = (val.correo ?? '').trim().toLowerCase();
     const pass = val.contrasena ? val.contrasena.trim() : '';
+    const passFinal = this.editClienteId ? pass : pass || 'cliente123';
 
-    const payload = new Cliente(
-      this.editClienteId ?? 0,
-      val.nombre!.trim(),
-      correoLimpio,
-      pass || 'cliente123',
-      val.telefono!.trim(),
-      val.direccion!.trim(),
-      true,
-      [],
-      (val.apellido ?? '').trim(),
-      correoLimpio,
-      pass,
-    );
+    const payload: Cliente = {
+      id: this.editClienteId ?? 0,
+      nombre: val.nombre!.trim(),
+      correo: correoLimpio,
+      contrasena: passFinal,
+      telefono: val.telefono!.trim(),
+      direccion: val.direccion!.trim(),
+      activo: true,
+      pedidos: [],
+      apellido: (val.apellido ?? '').trim(),
+      email: correoLimpio,
+      password: passFinal,
+    };
 
     // 1. Enviar petición PUT /clientes/update o POST /clientes/add y encadenar findAll() con mergeMap
     const idEditado = this.editClienteId;

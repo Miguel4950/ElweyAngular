@@ -1,7 +1,6 @@
-export class Administrador {
-  constructor(
-    public id: number,
-    public usuario: string,
-    public contrasena: string,
-  ) {}
+// buena practica
+export interface Administrador {
+  id: number;
+  usuario: string;
+  contrasena: string;
 }
